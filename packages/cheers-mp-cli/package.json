@@ -1,0 +1,19 @@
+{
+  "name": "cheers-mp-cli",
+  "version": "0.1.0",
+  "description": "生成小程序脚手架模板",
+  "author": "lizong <running@vip.163.com>",
+  "homepage": "https://github.com/bigmeow/cheers-mp",
+  "license": "MIT",
+  "main": "lib/cheers-mp-cli.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  }
+}

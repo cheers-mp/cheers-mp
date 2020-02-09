@@ -1,0 +1,54 @@
+{
+  "name": "cheers-mp-service",
+  "version": "0.1.0",
+  "description": "提供插件化的零配置小程序脚手架服务",
+  "keywords": [
+    "cheers-mp-service",
+    "cheers-mp",
+    "gulp",
+    "miniapp"
+  ],
+  "author": "lizong <running@vip.163.com>",
+  "homepage": "https://github.com/bigmeow/cheers-mp",
+  "license": "MIT",
+  "main": "bin/index.js",
+  "bin": {
+    "cheers-mp-service": "bin/index.js"
+  },
+  "typings": "types/index.d.ts",
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "utils",
+    "types"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "@hapi/joi": "^15.0.0",
+    "chalk": "^3.0.0",
+    "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
+    "fs-extra": "^8.1.0",
+    "gulp": "^4.0.2",
+    "gulp-insert": "^0.5.0",
+    "gulp-install": "^1.1.0",
+    "gulp-less": "^4.0.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-replaces": "^0.1.5",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "hash-sum": "^2.0.0",
+    "lodash.defaultsdeep": "^4.6.1",
+    "read-pkg": "^5.2.0",
+    "readline": "^1.3.0",
+    "semver": "^7.1.2",
+    "string.prototype.padstart": "^3.1.0",
+    "util": "^0.12.1"
+  }
+}

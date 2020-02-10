@@ -38,6 +38,7 @@
     "gulp-insert": "^0.5.0",
     "gulp-install": "^1.1.0",
     "gulp-less": "^4.0.1",
+    "less": "3.10.3",
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-replaces": "^0.1.5",

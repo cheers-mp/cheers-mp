@@ -16,7 +16,7 @@ const exec = util.promisify(require("child_process").exec);
 const httpServer = require("../httpServer");
 
 const logEvents = require("./events");
-const { info, log, warn } = require("../../utils/logger");
+const { info, log, warn, done } = require("../../utils/logger");
 
 logEvents(gulp);
 
@@ -82,11 +82,15 @@ const copier = (src, dist, ext) => {
 };
 
 const staticCopier = (src, dist) => {
-  return gulp.parallel(copier(src, dist, "wxml"), copier(src, dist, "wxs"), copier(src, dist, "wxss"), copier(src, dist, "json"));
+  return gulp.parallel(
+    copier(src, dist, "wxml"),
+    copier(src, dist, "wxs"),
+    copier(src, dist, "wxss"),
+    copier(src, dist, "json")
+  );
 };
 
 function createTask(context, userOptions, args) {
-  console.log(args);
   /** 源码所在目录 */
   const srcDir = path.join(context, "src");
 
@@ -96,12 +100,14 @@ function createTask(context, userOptions, args) {
   /** tsconfig.json 配置 */
   const tsConfig = path.join(context, "tsconfig.json");
 
+  /** 项目根目录下的package.json */
+  const srcPackageJsonPath = path.join(context, "package.json");
+
   /**
    * 在输出目录下安装依赖包并构建npm
    */
   const installAndBuilder = () => {
     const packageJsonPath = path.join(outputDir, "package.json");
-    const srcPackageJsonPath = path.join(context, "package.json");
     const projectRoot = context;
     async function createPackageJSON() {
       const packageJson = await fs.readJson(srcPackageJsonPath);
@@ -135,6 +141,22 @@ function createTask(context, userOptions, args) {
     return gulp.series(createPackageJSON, installDependencies, buildNPM);
   };
 
+  const uploadPreviewVersion = async () => {
+    const packageJson = await fs.readJson(srcPackageJsonPath);
+    const resultPath = context + path.sep + "upload-result.json";
+    await httpServer.upload(
+      context,
+      packageJson.version || "1.0.0",
+      "自动上传版本" + new Date().toLocaleString(),
+      resultPath
+    );
+    fs.readJson(resultPath).then(result => {
+      fs.remove(resultPath);
+      done(`本次上传: ${result.size.total} kb`);
+    });
+  };
+  uploadPreviewVersion.displayName = "上传小程序代码";
+
   const watch = async () => {
     gulp.watch("src/**/*.ts", tsCompiler(srcDir, outputDir, tsConfig));
     gulp.watch(`src/**/*.less`, lessCompiler(srcDir, outputDir));
@@ -145,10 +167,22 @@ function createTask(context, userOptions, args) {
     log();
     info("正在监听文件改动...");
   };
-  const taskArr = [cleaner(outputDir), gulp.parallel(lessCompiler(srcDir, outputDir), tsCompiler(srcDir, outputDir, tsConfig), staticCopier(srcDir, outputDir)), installAndBuilder()];
+  const taskArr = [
+    cleaner(outputDir),
+    gulp.parallel(
+      lessCompiler(srcDir, outputDir),
+      tsCompiler(srcDir, outputDir, tsConfig),
+      staticCopier(srcDir, outputDir)
+    ),
+    installAndBuilder()
+  ];
+  if (args.upload) {
+    taskArr.push(uploadPreviewVersion);
+  }
   if (args.watch) {
     taskArr.push(watch);
   }
+  // if (args.)
   const task = gulp.series(taskArr);
   return task;
 }

@@ -30,6 +30,8 @@ request.interceptors.response.use(
   err => {
     if (err.code === "ECONNREFUSED") {
       error("连接开发者工具服务失败，请先打开微信开发者工具");
+    } else {
+      error(JSON.stringify(err.response.data));
     }
     return Promise.reject(err);
   }
@@ -62,7 +64,27 @@ const buildNPM = projectpath => {
   });
 };
 
+/**
+ * 上传代码
+ * @param {string} projectpath 上传指定路径中的项目
+ * @param {string} version
+ * @param {string} desc
+ */
+const upload = (projectpath, version, desc, infooutput) => {
+  return request({
+    method: "GET",
+    url: "/upload",
+    params: {
+      projectpath,
+      version,
+      desc,
+      infooutput
+    }
+  });
+};
+
 module.exports = {
   openToolOrProject,
-  buildNPM
+  buildNPM,
+  upload
 };

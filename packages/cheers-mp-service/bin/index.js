@@ -17,7 +17,8 @@ const args = require("minimist")(process.argv.slice(2), {
   boolean: [
     // build
     "no-clean",
-    "watch"
+    "no-watch",
+    "upload"
     // serve
   ]
 });

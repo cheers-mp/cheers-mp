@@ -1,6 +1,12 @@
 const { log } = require("../../utils/logger");
 const { createTask } = require("../gulp/task");
 
+const defaults = {
+  clean: true,
+  watch: true,
+  upload: false
+};
+
 module.exports = (api, options) => {
   api.registerCommand(
     "serve",
@@ -12,8 +18,12 @@ module.exports = (api, options) => {
       }
     },
     async function serve(args) {
-      log();
-      args.watch = true;
+      for (const key in defaults) {
+        if (args[key] == null) {
+          args[key] = defaults[key];
+        }
+      }
+      log(args);
       const tasks = createTask(api.getCwd(), options, args);
       tasks();
       log();

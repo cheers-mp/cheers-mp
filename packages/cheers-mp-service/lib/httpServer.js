@@ -4,8 +4,21 @@ const path = require("path");
 const os = require("os");
 const { error } = require("../utils/logger");
 
-const portFilePath = path.join(os.homedir(), os.platform() === "win32" ? "/AppData/Local/微信开发者工具/User Data/Default/.ide" : "/Library/Application Support/微信开发者工具/Default/.ide");
-const port = fs.readFileSync(portFilePath, "utf-8");
+const portFilePath = path.join(
+  os.homedir(),
+  os.platform() === "win32"
+    ? "/AppData/Local/微信开发者工具/User Data/Default/.ide"
+    : "/Library/Application Support/微信开发者工具/Default/.ide"
+);
+let port;
+try {
+  port = fs.readFileSync(portFilePath, "utf-8");
+} catch (err) {
+  error(
+    "请打开“小程序开发者工具”，依次点击顶部菜单的“设置”==> “安全设置”==> “服务端口”勾选“开启”"
+  );
+  process.exit(1);
+}
 const request = axios.create({
   baseURL: `http://127.0.0.1:${port}`
 });

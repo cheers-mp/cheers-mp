@@ -24,7 +24,7 @@ exports.createServer = function createServer({ target, ip, port }) {
   const chalk = require("chalk");
   const app = express();
   const route = path.basename(target);
-  app.use(`/${route}`, express.static(target));
+  app.use(`/`, express.static(target));
 
   return new Promise((resolve, reject) => {
     portfinder.basePort = port; // default: 8000

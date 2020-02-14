@@ -82,7 +82,7 @@ function createTask(context, userOptions, args, command) {
   }
 
   const rewriter = function(url) {
-    if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_")) {
+    if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_") > -1) {
       return url;
     }
     if ([".jpg", ".jpeg", ".png", ".gif"].includes(path.extname(url))) {

@@ -24,9 +24,9 @@ const ImageOperator = config => {
       return UploadClient(config.oss, config.target);
     },
     proxy: () => createServer({ ip, ...config.proxy, target: config.target }),
-    getProxyURI: (localFile, dirname = __dirname) => {
+    getProxyURI: localFile => {
       const { port } = config.proxy;
-      let relativePath = normalize(relative(dirname, localFile));
+      let relativePath = normalize(localFile);
       return `http://${ip}:${port}/${relativePath}`;
     },
     getNetURI: localFile => {

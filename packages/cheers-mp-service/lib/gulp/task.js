@@ -85,7 +85,7 @@ function createTask(context, userOptions, args, command) {
     if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_")) {
       return url;
     }
-    if (["jpg", "jpeg", "png", "gif"].includes(path.extname(url))) {
+    if ([".jpg", ".jpeg", ".png", ".gif"].includes(path.extname(url))) {
       try {
         return command === "serve" ? imageOperator.getProxyURI(url) : imageOperator.getNetURI(path.join(srcDir, url));
       } catch (error) {

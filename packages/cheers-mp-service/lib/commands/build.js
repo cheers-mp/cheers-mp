@@ -28,7 +28,7 @@ module.exports = (api, options) => {
       }
 
       log();
-      const tasks = createTask(api.getCwd(), options, args);
+      const tasks = createTask(api.getCwd(), options, args, "build");
       tasks();
       log();
     }

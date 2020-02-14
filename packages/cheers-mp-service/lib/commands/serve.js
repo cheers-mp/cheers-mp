@@ -23,8 +23,8 @@ module.exports = (api, options) => {
           args[key] = defaults[key];
         }
       }
-      log(args);
-      const tasks = createTask(api.getCwd(), options, args);
+      log();
+      const tasks = createTask(api.getCwd(), options, args, "serve");
       tasks();
       log();
     }

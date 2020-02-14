@@ -7,6 +7,10 @@ const insert = require("gulp-insert");
 const rename = require("gulp-rename");
 const sourcemaps = require("gulp-sourcemaps");
 
+const cdnify = require("gulp-cdnify");
+
+const gulpif = require("gulp-if");
+
 const ts = require("gulp-typescript");
 const replaces = require("gulp-replaces");
 const resolveClientEnv = require("../../utils/resolveClientEnv");
@@ -20,37 +24,14 @@ const { info, log, warn, done } = require("../../utils/logger");
 
 logEvents(gulp);
 
+const IMAGE_EXT = "{jpg,jpeg,png,gif}";
+
 const cleaner = path => {
   function clean() {
     return fs.remove(path);
   }
   clean.displayName = "清空输出目录";
   return clean;
-};
-
-const lessCompiler = (src, dist) => {
-  function compileLess() {
-    return (
-      gulp
-        .src(`${src}/**/*.less`)
-        .pipe(sourcemaps.init())
-        .pipe(less())
-        // .pipe(postcss())
-        .pipe(
-          insert.transform((contents, file) => {
-            if (!file.path.includes("src" + path.sep + "common")) {
-              contents = `@import '/common/index.wxss';${contents}`;
-            }
-            return contents;
-          })
-        )
-        .pipe(rename({ extname: ".wxss" }))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(dist))
-    );
-  }
-  compileLess.displayName = "编译less";
-  return compileLess;
 };
 
 const tsCompiler = (src, dist, config) => {
@@ -73,24 +54,7 @@ const tsCompiler = (src, dist, config) => {
   return compileTs;
 };
 
-const copier = (src, dist, ext) => {
-  function copy() {
-    return gulp.src(`${src}/**/*.${ext}`).pipe(gulp.dest(dist));
-  }
-  copy.displayName = "拷贝" + ext;
-  return copy;
-};
-
-const staticCopier = (src, dist) => {
-  return gulp.parallel(
-    copier(src, dist, "wxml"),
-    copier(src, dist, "wxs"),
-    copier(src, dist, "wxss"),
-    copier(src, dist, "json")
-  );
-};
-
-function createTask(context, userOptions, args) {
+function createTask(context, userOptions, args, command) {
   /** 源码所在目录 */
   const srcDir = path.join(context, "src");
 
@@ -102,6 +66,104 @@ function createTask(context, userOptions, args) {
 
   /** 项目根目录下的package.json */
   const srcPackageJsonPath = path.join(context, "package.json");
+
+  const isUseOSS = userOptions.oss && userOptions.oss.options;
+  let imageOperator, prepareImage;
+  if (isUseOSS) {
+    imageOperator = require("cheers-mp-images")({
+      target: srcDir,
+      proxy: {
+        port: 8888
+      },
+      oss: userOptions.oss.options
+    });
+    prepareImage = command === "serve" ? imageOperator.proxy : imageOperator.upload;
+    prepareImage.displayName = "预处理图片";
+  }
+
+  const rewriter = function(url) {
+    if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_")) {
+      return url;
+    }
+    if (["jpg", "jpeg", "png", "gif"].includes(path.extname(url))) {
+      try {
+        return command === "serve" ? imageOperator.getProxyURI(url) : imageOperator.getNetURI(path.join(srcDir, url));
+      } catch (error) {
+        return url;
+      }
+    }
+    return url;
+  };
+
+  const copier = (src, dist, ext) => {
+    function copy() {
+      return gulp
+        .src(`${src}/**/*.${ext}`)
+        .pipe(
+          gulpif(
+            "wxml" === ext && isUseOSS,
+            cdnify({
+              html: {
+                "image[src]": "src"
+              },
+              rewriter
+            })
+          )
+        )
+        .pipe(gulp.dest(dist));
+    }
+    copy.displayName = "拷贝" + ext;
+    return copy;
+  };
+
+  const copyLOCAL = () => {
+    return gulp.src(`${srcDir}/**/LOCAL_*.${IMAGE_EXT}`).pipe(gulp.dest(outputDir));
+  };
+  copyLOCAL.displayName = "拷贝LOCAL_前缀的图片";
+
+  const staticCopier = () => {
+    const copyTask = [
+      copier(srcDir, outputDir, "wxml"),
+      copier(srcDir, outputDir, "wxs"),
+      copier(srcDir, outputDir, "wxss"),
+      copier(srcDir, outputDir, "json")
+    ];
+    // 不使用oss拷贝所有图片，开启oss则只拷贝文件名带有LOCAL_前缀的图片
+    if (!isUseOSS) {
+      copyTask.push(copier(srcDir, outputDir, IMAGE_EXT));
+    } else {
+      copyTask.push(copyLOCAL);
+    }
+    return gulp.parallel(...copyTask);
+  };
+
+  function compileLess() {
+    return (
+      gulp
+        .src(`${srcDir}/**/*.less`)
+        .pipe(less())
+        // .pipe(postcss())
+        // .pipe(
+        //   insert.transform((contents, file) => {
+        //     if (!file.path.includes("src" + path.sep + "common")) {
+        //       contents = `@import '/common/index.wxss';${contents}`;
+        //     }
+        //     return contents;
+        //   })
+        // )
+        .pipe(
+          gulpif(
+            isUseOSS,
+            cdnify({
+              rewriter
+            })
+          )
+        )
+        .pipe(rename({ extname: ".wxss" }))
+        .pipe(gulp.dest(outputDir))
+    );
+  }
+  compileLess.displayName = "编译less";
 
   /**
    * 在输出目录下安装依赖包并构建npm
@@ -141,6 +203,7 @@ function createTask(context, userOptions, args) {
     return gulp.series(createPackageJSON, installDependencies, buildNPM);
   };
 
+  /** 通过小程序开发者工具上传 */
   const uploadPreviewVersion = async () => {
     const packageJson = await fs.readJson(srcPackageJsonPath);
     const resultPath = context + path.sep + "upload-result.json";
@@ -159,30 +222,34 @@ function createTask(context, userOptions, args) {
 
   const watch = async () => {
     gulp.watch("src/**/*.ts", tsCompiler(srcDir, outputDir, tsConfig));
-    gulp.watch(`src/**/*.less`, lessCompiler(srcDir, outputDir));
+    gulp.watch(`src/**/*.less`, compileLess);
     gulp.watch(`src/**/*.wxml`, copier(srcDir, outputDir, "wxml"));
     gulp.watch(`src/**/*.wxs`, copier(srcDir, outputDir, "wxs"));
     gulp.watch(`src/**/*.wxss`, copier(srcDir, outputDir, "wxs"));
     gulp.watch(`src/**/*.json`, copier(srcDir, outputDir, "json"));
+    if (!isUseOSS) {
+      gulp.watch(`src/**/*.${IMAGE_EXT}`, copier(srcDir, outputDir, IMAGE_EXT));
+    } else {
+      gulp.watch(`src/**/LOCAL_*.${IMAGE_EXT}`, copyLOCAL);
+    }
     log();
     info("正在监听文件改动...");
   };
   const taskArr = [
     cleaner(outputDir),
-    gulp.parallel(
-      lessCompiler(srcDir, outputDir),
-      tsCompiler(srcDir, outputDir, tsConfig),
-      staticCopier(srcDir, outputDir)
-    ),
+    gulp.parallel(compileLess, tsCompiler(srcDir, outputDir, tsConfig), staticCopier()),
     installAndBuilder()
   ];
+  if (isUseOSS) {
+    taskArr.splice(1, 0, prepareImage);
+  }
   if (args.upload) {
     taskArr.push(uploadPreviewVersion);
   }
   if (args.watch) {
     taskArr.push(watch);
   }
-  // if (args.)
+
   const task = gulp.series(taskArr);
   return task;
 }

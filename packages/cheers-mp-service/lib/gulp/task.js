@@ -42,7 +42,7 @@ const tsCompiler = (src, dist, config) => {
     const env = replaces(resolveClientEnv());
     return (
       gulp
-        .src(`${src}/**/*.ts`, { since: gulp.lastRun(tsCompiler) })
+        .src(`${src}/**/*.ts`, { since: gulp.lastRun(compileTs) })
         // .pipe(sourcemaps.init())
         .pipe(ts.createProject(config)())
         .pipe(env)
@@ -98,7 +98,7 @@ function createTask(context, userOptions, args, command) {
   const copier = (src, dist, ext) => {
     function copy() {
       return gulp
-        .src(`${src}/**/*.${ext}`)
+        .src(`${src}/**/*.${ext}`, { since: gulp.lastRun(copy) })
         .pipe(
           gulpif(
             "wxml" === ext && isUseOSS,
@@ -140,7 +140,7 @@ function createTask(context, userOptions, args, command) {
   function compileLess() {
     return (
       gulp
-        .src(`${srcDir}/**/*.less`)
+        .src(`${srcDir}/**/*.less`, { since: gulp.lastRun(compileLess) })
         .pipe(less())
         // .pipe(postcss())
         // .pipe(

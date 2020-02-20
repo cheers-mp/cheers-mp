@@ -46,6 +46,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-replaces": "^0.1.5",
     "gulp-sourcemaps": "^2.6.5",
+    "gulp-ts-alias": "^1.1.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "hash-sum": "^2.0.0",
     "less": "3.10.3",

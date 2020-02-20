@@ -3,9 +3,9 @@ const path = require("path");
 const fs = require("fs-extra");
 
 const less = require("gulp-less");
-const insert = require("gulp-insert");
+// const insert = require("gulp-insert");
 const rename = require("gulp-rename");
-const sourcemaps = require("gulp-sourcemaps");
+// const sourcemaps = require("gulp-sourcemaps");
 
 const cdnify = require("gulp-cdnify");
 
@@ -32,26 +32,6 @@ const cleaner = path => {
   }
   clean.displayName = "清空输出目录";
   return clean;
-};
-
-const tsCompiler = (src, dist, config) => {
-  function compileTs() {
-    // await exec(`npx ../node_modules/typescript/lib/tsc.js -p ${config}`);
-    // await exec(`npx tscpaths -p ${config} -s ../src -o ${dist}`);
-    // TODO 如果ts 的target 是es5，则输出sourcemaps
-    const env = replaces(resolveClientEnv());
-    return (
-      gulp
-        .src(`${src}/**/*.ts`, { since: gulp.lastRun(compileTs) })
-        // .pipe(sourcemaps.init())
-        .pipe(ts.createProject(config)())
-        .pipe(env)
-        // .pipe(sourcemaps.write())
-        .pipe(gulp.dest(dist))
-    );
-  }
-  compileTs.displayName = "编译typescript";
-  return compileTs;
 };
 
 function createTask(context, userOptions, args, command) {
@@ -135,6 +115,29 @@ function createTask(context, userOptions, args, command) {
       copyTask.push(copyLOCAL);
     }
     return gulp.parallel(...copyTask);
+  };
+
+  const tsCompiler = () => {
+    const alias = require("gulp-ts-alias");
+    const tsProject = ts.createProject(tsConfig, { moduleResolution: "Node" });
+    function compileTs() {
+      // await exec(`npx ../node_modules/typescript/lib/tsc.js -p ${config}`);
+      // await exec(`npx tscpaths -p ${config} -s ../src -o ${dist}`);
+      // TODO 如果ts 的target 是es5，则输出sourcemaps
+      const env = replaces(resolveClientEnv());
+      return (
+        gulp
+          .src(`${srcDir}/**/*.ts`, { since: gulp.lastRun(compileTs) })
+          .pipe(alias({ configuration: tsProject.config }))
+          // .pipe(sourcemaps.init())
+          .pipe(tsProject())
+          .pipe(env)
+          // .pipe(sourcemaps.write())
+          .pipe(gulp.dest(outputDir))
+      );
+    }
+    compileTs.displayName = "编译typescript";
+    return compileTs;
   };
 
   function compileLess() {
@@ -221,7 +224,7 @@ function createTask(context, userOptions, args, command) {
   uploadPreviewVersion.displayName = "上传小程序代码";
 
   const watch = async () => {
-    gulp.watch("src/**/*.ts", tsCompiler(srcDir, outputDir, tsConfig));
+    gulp.watch("src/**/*.ts", tsCompiler());
     gulp.watch(`src/**/*.less`, compileLess);
     gulp.watch(`src/**/*.wxml`, copier(srcDir, outputDir, "wxml"));
     gulp.watch(`src/**/*.wxs`, copier(srcDir, outputDir, "wxs"));
@@ -235,11 +238,7 @@ function createTask(context, userOptions, args, command) {
     log();
     info("正在监听文件改动...");
   };
-  const taskArr = [
-    cleaner(outputDir),
-    gulp.parallel(compileLess, tsCompiler(srcDir, outputDir, tsConfig), staticCopier()),
-    installAndBuilder()
-  ];
+  const taskArr = [cleaner(outputDir), gulp.parallel(compileLess, tsCompiler(), staticCopier()), installAndBuilder()];
   if (isUseOSS) {
     taskArr.splice(1, 0, prepareImage);
   }

@@ -77,20 +77,28 @@ function createTask(context, userOptions, args, command) {
 
   const copier = (src, dist, ext) => {
     function copy() {
-      return gulp
-        .src(`${src}/**/*.${ext}`, { since: gulp.lastRun(copy) })
-        .pipe(
-          gulpif(
-            "wxml" === ext && isUseOSS,
-            cdnify({
-              html: {
-                "image[src]": "src"
-              },
-              rewriter
-            })
-          )
-        )
-        .pipe(gulp.dest(dist));
+      switch (true) {
+        case "wxml" === ext && isUseOSS:
+          return gulp
+            .src(`${src}/**/*.${ext}`, { since: gulp.lastRun(copy) })
+            .pipe(
+              cdnify({
+                html: {
+                  "image[src]": "src"
+                },
+                rewriter
+              })
+            )
+            .pipe(gulp.dest(dist));
+        case "wxs" === ext:
+          const env = replaces(resolveClientEnv());
+          return gulp
+            .src(`${src}/**/*.${ext}`, { since: gulp.lastRun(copy) })
+            .pipe(env)
+            .pipe(gulp.dest(dist));
+        default:
+          return gulp.src(`${src}/**/*.${ext}`, { since: gulp.lastRun(copy) }).pipe(gulp.dest(dist));
+      }
     }
     copy.displayName = "拷贝" + ext;
     return copy;

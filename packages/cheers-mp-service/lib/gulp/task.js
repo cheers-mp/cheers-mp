@@ -47,7 +47,7 @@ function createTask(context, userOptions, args, command) {
   /** 项目根目录下的package.json */
   const srcPackageJsonPath = path.join(context, "package.json");
 
-  const isUseOSS = userOptions.oss && userOptions.oss.options;
+  const isUseOSS = !!(userOptions.oss && userOptions.oss.options);
   let imageOperator, prepareImage;
   if (isUseOSS) {
     imageOperator = require("cheers-mp-images")({

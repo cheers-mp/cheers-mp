@@ -33,6 +33,7 @@
     "axios": "^0.19.2",
     "chalk": "^3.0.0",
     "cheers-mp-images": "^1.1.2",
+    "deepmerge": "^4.2.2",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
     "fs-extra": "^8.1.0",

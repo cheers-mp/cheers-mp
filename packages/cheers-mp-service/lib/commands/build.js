@@ -103,7 +103,7 @@ module.exports = (api, userOptions) => {
       taskArr.push(gulp.parallel(...compilerTask));
 
       // 构建npm
-      const installAndBuilderTask = require("../gulp/installAndBuilder")(baseOpt, userOptions);
+      const installAndBuilderTask = require("../gulp/miniprogramCI")(baseOpt, userOptions);
       taskArr.push(installAndBuilderTask);
 
       gulp.series(taskArr)();

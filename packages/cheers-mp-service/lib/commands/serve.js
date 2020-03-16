@@ -49,6 +49,11 @@ module.exports = (api, userOptions) => {
       // 清空输出目录
       taskArr.push(require("../gulp/clean")(baseOpt.outputDir));
 
+      // 切换appid
+      if (process.env.APPID) {
+        await require("../gulp/switchAppid")(baseOpt.context);
+      }
+
       // 预处理图片
       let imageOperator, prepareImage;
       if (baseOpt.isUseOSS) {
@@ -100,10 +105,11 @@ module.exports = (api, userOptions) => {
       const installAndBuilderTask = require("../gulp/installAndBuilder")(baseOpt, userOptions);
       taskArr.push(installAndBuilderTask);
 
-      gulp.series(taskArr)();
-
-      log();
-      info("正在监听文件改动...");
+      await gulp.series(taskArr)(err => {
+        err && process.exit(1);
+        log();
+        info("正在监听文件改动...");
+      });
     }
   );
 };

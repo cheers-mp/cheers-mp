@@ -1,5 +1,5 @@
 const prefixRE = /^CHEERS_MP_/;
-const systemEnvWhiteList = ["NODE_ENV", "PLATFORM"];
+const systemEnvWhiteList = ["NODE_ENV", "APPID"];
 
 module.exports = function resolveClientEnv() {
   const env = {};

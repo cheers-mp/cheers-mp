@@ -56,6 +56,11 @@ module.exports = (api, userOptions) => {
         taskArr.push(require("../gulp/clean")(baseOpt.outputDir));
       }
 
+      // 切换appid
+      if (process.env.APPID) {
+        await require("../gulp/switchAppid")(baseOpt.context);
+      }
+
       // 预处理图片
       let imageOperator, prepareImage;
       if (baseOpt.isUseOSS) {
@@ -107,10 +112,11 @@ module.exports = (api, userOptions) => {
       const installAndBuilderTask = require("../gulp/miniprogramCI")(baseOpt, userOptions);
       taskArr.push(installAndBuilderTask);
 
-      gulp.series(taskArr)();
-
-      log();
-      done("编译完成");
+      gulp.series(taskArr)(err => {
+        err && process.exit(1);
+        log();
+        done("任务完成~");
+      });
     }
   );
 };

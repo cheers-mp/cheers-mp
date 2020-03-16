@@ -83,6 +83,7 @@ module.exports = (api, userOptions) => {
         { name: "less", ext: ".less" },
         { name: "wxss", ext: ".wxss" },
         { name: "ts", ext: ".ts" },
+        { name: "js", ext: ".js" },
         { name: "wxml", ext: ".wxml" },
         { name: "json", ext: ".json" },
         { name: "wxs", ext: ".wxs" },

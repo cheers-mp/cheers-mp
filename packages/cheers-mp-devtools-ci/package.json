@@ -1,0 +1,37 @@
+{
+  "name": "cheers-mp-devtools-ci",
+  "version": "1.0.0",
+  "description": "对微信客户端开发者工具提供的命令服务二次封装",
+  "keywords": [
+    "微信小程序",
+    "开发者工具",
+    "ci",
+    "http"
+  ],
+  "author": "lizong <running@vip.163.com>",
+  "homepage": "https://github.com/bigmeow/cheers-mp#readme",
+  "license": "MIT",
+  "main": "lib/CLI.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bigmeow/cheers-mp.git"
+  },
+  "scripts": {
+    "test": " node __tests__/cli.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/bigmeow/cheers-mp/issues"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "fs-extra": "^8.1.0",
+    "util": "^0.12.2"
+  }
+}

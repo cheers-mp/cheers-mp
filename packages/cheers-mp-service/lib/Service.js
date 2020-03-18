@@ -56,7 +56,7 @@ module.exports = class Service {
 
     let plugins;
     // 读取service内置插件名单
-    const builtInPlugins = ["./commands/serve", "./commands/build"].map(idToPlugin);
+    const builtInPlugins = ["./commands/serve", "./commands/build", "./commands/help"].map(idToPlugin);
     // 读取用户package.json中devDependencies和dependencies依赖中的插件名单
     const projectPlugins = Object.keys(this.pkg.devDependencies || {})
       .concat(Object.keys(this.pkg.dependencies || {}))
@@ -135,7 +135,11 @@ module.exports = class Service {
         }
 
         if (!fileConfig || typeof fileConfig !== "object") {
-          error(`Error loading ${chalk.bold("cheers.config.js")}: should export an object or a function that returns object.`);
+          error(
+            `Error loading ${chalk.bold(
+              "cheers.config.js"
+            )}: should export an object or a function that returns object.`
+          );
           fileConfig = null;
         }
       } catch (e) {

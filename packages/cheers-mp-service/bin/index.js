@@ -18,8 +18,9 @@ const args = require("minimist")(process.argv.slice(2), {
     // build
     "no-clean",
     "no-watch",
-    "upload"
+    "upload",
     // serve
+    "open"
   ]
 });
 const command = args._[0];

@@ -37,8 +37,14 @@ const installAndBuilder = async (opt, userOptions, args) => {
   }
   buildNPM.displayName = "调用本地开发者工具的“构建NPM”服务";
 
+  async function open() {
+    const res = await instance.open(opt.context);
+    console.log(res.stderr);
+    console.log(res.stdout);
+  }
+  open.displayName = "在本地开发者工具中打开项目";
+
   async function upload() {
-    const d = new Date();
     res = await instance.upload(opt.context, formatDate(new Date(), "yyyy.MM.ddhhmmss"), "自动构建上传测试");
     console.log(res.stderr);
     console.log(res.stdout);
@@ -46,6 +52,9 @@ const installAndBuilder = async (opt, userOptions, args) => {
   upload.displayName = "调用本地开发者工具的“上传小程序代码”服务";
 
   const taskSync = [createPackageJSON, installDependencies, buildNPM];
+  if (args.open) {
+    taskSync.push(open);
+  }
   if (args.upload) {
     taskSync.push(upload);
   }

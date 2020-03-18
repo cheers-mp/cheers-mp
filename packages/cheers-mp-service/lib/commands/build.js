@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs-extra");
 const gulp = require("gulp");
 const { log, done } = require("../../utils/logger");
 
@@ -92,20 +93,22 @@ module.exports = (api, userOptions) => {
 
       // 其他并行编译任务
       const compilerTask = [
-        { name: "less", ext: ".less" },
-        { name: "wxss", ext: ".wxss" },
-        { name: "ts", ext: ".ts" },
-        { name: "js", ext: ".js" },
-        { name: "wxml", ext: ".wxml" },
-        { name: "json", ext: ".json" },
-        { name: "wxs", ext: ".wxs" },
-        { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}" }
-      ].map(({ name, ext }) => {
-        const task = require("../gulp/" + name)(baseOpt);
-        // 监听模式
-        args.watch && gulp.watch(`src/**/*${ext}`, task);
-        return task;
-      });
+        { name: "less", ext: ".less", enabled: true },
+        { name: "wxss", ext: ".wxss", enabled: true },
+        { name: "ts", ext: ".ts", enabled: fs.existsSync(baseOpt.tsConfig) },
+        { name: "js", ext: ".js", enabled: true },
+        { name: "wxml", ext: ".wxml", enabled: true },
+        { name: "json", ext: ".json", enabled: true },
+        { name: "wxs", ext: ".wxs", enabled: true },
+        { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}", enabled: true }
+      ]
+        .filter(item => item.enabled)
+        .map(({ name, ext }) => {
+          const task = require("../gulp/" + name)(baseOpt);
+          // 监听模式
+          args.watch && gulp.watch(`src/**/*${ext}`, task);
+          return task;
+        });
       taskArr.push(gulp.parallel(...compilerTask));
 
       // 构建npm、上传代码

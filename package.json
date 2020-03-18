@@ -6,8 +6,5 @@
   },
   "prettier": {
     "printWidth": 120
-  },
-  "dependencies": {
-    "cheers-mp-devtools-ci": "^1.0.0"
   }
 }

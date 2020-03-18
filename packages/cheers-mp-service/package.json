@@ -1,6 +1,6 @@
 {
   "name": "cheers-mp-service",
-  "version": "1.2.0-alpha.0",
+  "version": "1.2.0-alpha.1",
   "description": "提供插件化的零配置小程序脚手架服务",
   "keywords": [
     "cheers-mp-service",
@@ -32,7 +32,7 @@
     "@hapi/joi": "^15.0.0",
     "axios": "^0.19.2",
     "chalk": "^3.0.0",
-    "cheers-mp-devtools-ci": "^1.0.0",
+    "cheers-mp-devtools-ci": "^1.2.0-alpha.1",
     "cheers-mp-images": "^1.1.2",
     "deepmerge": "^4.2.2",
     "dotenv": "^8.2.0",

@@ -61,9 +61,9 @@ module.exports = (api, userOptions) => {
         await require("../gulp/switchAppid")(baseOpt.context);
       }
 
-      // 预处理图片
-      let imageOperator, prepareImage;
       if (baseOpt.isUseOSS) {
+        // 预处理图片
+        let imageOperator, prepareImage;
         // 处理文件内匹配到的图片url
         baseOpt.rewriter = url => {
           if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_") > -1) {
@@ -87,8 +87,8 @@ module.exports = (api, userOptions) => {
         });
         prepareImage = imageOperator.upload;
         prepareImage.displayName = "上传项目中使用的图片到oss";
+        taskArr.push(prepareImage);
       }
-      taskArr.push(prepareImage);
 
       // 其他并行编译任务
       const compilerTask = [
@@ -108,14 +108,19 @@ module.exports = (api, userOptions) => {
       });
       taskArr.push(gulp.parallel(...compilerTask));
 
-      // 构建npm
-      const installAndBuilderTask = require("../gulp/miniprogramCI")(baseOpt, userOptions);
-      taskArr.push(installAndBuilderTask);
+      // 构建npm、上传代码
+      if (userOptions.compiler.type === "hard") {
+        const installAndBuilderTask = await require("../gulp/devToolsCI")(baseOpt, userOptions, args);
+        taskArr.push(installAndBuilderTask);
+      } else {
+        const installAndBuilderTask = require("../gulp/miniprogramCI")(baseOpt, userOptions, args);
+        taskArr.push(installAndBuilderTask);
+      }
 
       gulp.series(taskArr)(err => {
         err && process.exit(1);
         log();
-        done("任务完成~");
+        done("任务完成~（＾∀＾）");
       });
     }
   );

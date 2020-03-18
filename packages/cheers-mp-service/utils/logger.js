@@ -34,11 +34,11 @@ exports.done = (msg, tag = null) => {
 
 exports.warn = (msg, tag = null) => {
   console.log();
-  console.warn(format(chalk.bgYellow.black(" WARN ") + (tag ? chalkTag(tag) : ""), chalk.yellow(msg)));
+  console.warn(format(chalk.bgYellow.black(" WARN ") + (tag ? chalkTag(tag) : ""), chalk.yellow("(￣□￣) " + msg)));
 };
 
 exports.error = (msg, tag = null) => {
-  console.error(format(chalk.bgRed(" ERROR ") + (tag ? chalkTag(tag) : ""), chalk.red(msg)));
+  console.error(format(chalk.bgRed(" ERROR ") + (tag ? chalkTag(tag) : ""), chalk.red("(〒_〒) " + msg)));
   if (msg instanceof Error) {
     console.error(msg.stack);
   }

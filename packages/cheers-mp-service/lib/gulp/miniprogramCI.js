@@ -2,11 +2,12 @@ const gulp = require("gulp");
 const path = require("path");
 const fs = require("fs-extra");
 const gulpInstall = require("gulp-install");
+const formatDate = require("../../utils/date");
 
 /**
  * 在输出目录下安装依赖包并构建npm
  */
-const installAndBuilder = (opt, userOptions) => {
+const installAndBuilder = (opt, userOptions, args) => {
   /** 输出目录下的package.json 路径 */
   const distPackageJsonPath = path.join(opt.outputDir, "package.json");
 
@@ -16,14 +17,16 @@ const installAndBuilder = (opt, userOptions) => {
   /** 项目根目录下的小程序开发者工具配置文件 */
   const projectConfigJson = require(path.join(opt.context, "project.config.json"));
 
+  const ciOpt = userOptions.compiler.options;
+
   const ci = require("miniprogram-ci");
-  if (!userOptions.ci.appid) {
-    userOptions.ci.appid = projectConfigJson.appid;
+  if (!ciOpt.appid) {
+    ciOpt.appid = projectConfigJson.appid;
   }
-  if (!userOptions.ci.projectPath) {
-    userOptions.ci.projectPath = opt.outputDir;
+  if (!ciOpt.projectPath) {
+    ciOpt.projectPath = opt.outputDir;
   }
-  const project = new ci.Project(userOptions.ci);
+  const project = new ci.Project(ciOpt);
 
   async function createPackageJSON() {
     const dependencies = srcPackageJson.dependencies || {};
@@ -49,15 +52,20 @@ const installAndBuilder = (opt, userOptions) => {
   async function upload() {
     return ci.upload({
       project,
-      version: srcPackageJson.version || "1.0.0",
-      desc: "自动上传于" + new Date().toLocaleString(),
+      version: formatDate(new Date(), "yyyy.MM.ddhhmmss"),
+      desc: "ci机器人自动上传于" + new Date().toLocaleString(),
       setting: projectConfigJson.setting,
       onProgressUpdate: console.log
     });
   }
   upload.displayName = "调用CI包的“上传代码”服务";
 
-  return gulp.series(createPackageJSON, installDependencies, buildNPM, upload);
+  const taskSync = [createPackageJSON, installDependencies, buildNPM];
+  if (args.upload) {
+    taskSync.push(upload);
+  }
+
+  return gulp.series(...taskSync);
 };
 
 module.exports = installAndBuilder;

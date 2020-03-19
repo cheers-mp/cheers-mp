@@ -68,7 +68,7 @@ class CLI {
    * 打开工具，如果不带 projectpath，只是打开工具。如果带 project path，则打开路径中的项目，每次执行都会自动编译刷新，并且自动打开模拟器和调试器。projectpath 不能是相对路径。项目路径中必须含正确格式的 project.config.json 且其中有 appid 和 projectname 字段。
    * @param {String} projectPath
    */
-  async open(projectPath) {
+  open(projectPath) {
     const commandStr =
       this.version === "v1"
         ? ["--open", IF(projectPath, `"${projectPath}"`)].join("")
@@ -94,6 +94,15 @@ class CLI {
             IF(version, `-v ${version}`),
             IF(remark, `-d "${remark}"`)
           ].join("");
+    return this._exec(commandStr);
+  }
+
+  /**
+   * 重置工具内部文件缓存，重新监听项目文件。
+   * @param {string} projectPath
+   */
+  resetFileutils(projectPath) {
+    const commandStr = ["reset-fileutils", IF(projectPath, `--project "${projectPath}"`)].join("");
     return this._exec(commandStr);
   }
 

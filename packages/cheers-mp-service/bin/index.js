@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const path = require("path");
 const semver = require("semver");
 const { error } = require("../utils/logger");
 const requiredVersion = require("../package.json").engines.node;

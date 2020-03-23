@@ -3,7 +3,9 @@ const gulpLess = require("gulp-less");
 const gulpIf = require("gulp-if");
 const gulpCDN = require("gulp-cdnify");
 const gulpRename = require("gulp-rename");
+const gulpPostcss = require("gulp-postcss");
 const deepmerge = require("deepmerge");
+const px2rpx = require("./postcss-px2rpx");
 
 const defaultOpt = {
   srcDir: "src",
@@ -16,30 +18,37 @@ function less(opt) {
   opt = deepmerge(defaultOpt, opt);
 
   function compileLESS() {
-    return (
-      gulp
-        .src(`${opt.srcDir}/**/*.less`, { since: gulp.lastRun(compileLESS) })
-        .pipe(gulpLess())
-        // .pipe(postcss())
-        // .pipe(
-        //   insert.transform((contents, file) => {
-        //     if (!file.path.includes("src" + path.sep + "common")) {
-        //       contents = `@import '/common/index.wxss';${contents}`;
-        //     }
-        //     return contents;
-        //   })
-        // )
-        .pipe(
-          gulpIf(
-            opt.isUseOSS,
-            gulpCDN({
-              rewriter: opt.rewriter
-            })
-          )
+    return gulp
+      .src(`${opt.srcDir}/**/*.less`, { since: gulp.lastRun(compileLESS) })
+
+      .pipe(gulpLess())
+      .pipe(
+        gulpPostcss([
+          px2rpx({
+            rpxUnit: 1,
+            rpxPrecision: 6
+          }),
+          require("cssnano")({
+            preset: [
+              "default",
+              {
+                discardComments: { removeAll: true },
+                calc: false
+              }
+            ]
+          })
+        ])
+      )
+      .pipe(
+        gulpIf(
+          opt.isUseOSS,
+          gulpCDN({
+            rewriter: opt.rewriter
+          })
         )
-        .pipe(gulpRename({ extname: ".wxss" }))
-        .pipe(gulp.dest(opt.outputDir))
-    );
+      )
+      .pipe(gulpRename({ extname: ".wxss" }))
+      .pipe(gulp.dest(opt.outputDir));
   }
   compileLESS.displayName = "编译less";
   return compileLESS;

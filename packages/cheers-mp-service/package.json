@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.0.0",
+    "@megalo/px2rpx": "^0.1.0",
     "axios": "^0.19.2",
     "chalk": "^3.0.0",
     "cheers-mp-devtools-ci": "^1.2.0-alpha.1",

@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const gulpInstall = require("gulp-install");
 const formatDate = require("../../utils/date");
+const { warn } = require("../../utils/logger");
 
 /**
  * 在输出目录下安装依赖包并构建npm
@@ -38,9 +39,13 @@ const installAndBuilder = async (opt, userOptions, args) => {
   buildNPM.displayName = "调用本地开发者工具的“构建NPM”服务";
 
   async function open() {
-    const res = await instance.open(opt.context);
-    console.log(res.stderr);
-    console.log(res.stdout);
+    try {
+      const res = await instance.open(opt.context);
+      console.log(res.stderr);
+      console.log(res.stdout);
+    } catch (error) {
+      warn("打开失败，请手动进行操作。失败原因：" + JSON.stringify(error));
+    }
   }
   open.displayName = "在本地开发者工具中打开项目";
 

@@ -15,8 +15,11 @@ function formatError(e) {
   if (e.error.stack) {
     return e.error.stack;
   }
-
-  // Unknown (string, number, etc.)
+  if (typeof e.error === "object") {
+    try {
+      e.error = JSON.stringify(e.error);
+    } catch (error) {}
+  }
   return new Error(String(e.error)).stack;
 }
 

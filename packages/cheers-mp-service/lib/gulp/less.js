@@ -14,31 +14,31 @@ const defaultOpt = {
   rewriter: url => url
 };
 
-function less(opt) {
+function less(opt, userOptions) {
   opt = deepmerge(defaultOpt, opt);
-
+  const postcssPlugins = [];
+  if (userOptions.css.px2rpx) {
+    postcssPlugins.push(px2rpx(userOptions.css.px2rpx));
+  }
+  if (process.env.NODE_ENV === "production") {
+    postcssPlugins.push(
+      require("cssnano")({
+        preset: [
+          "default",
+          {
+            discardComments: { removeAll: true },
+            calc: false
+          }
+        ]
+      })
+    );
+  }
   function compileLESS() {
     return gulp
       .src(`${opt.srcDir}/**/*.less`, { since: gulp.lastRun(compileLESS) })
 
       .pipe(gulpLess())
-      .pipe(
-        gulpPostcss([
-          px2rpx({
-            rpxUnit: 1,
-            rpxPrecision: 6
-          }),
-          require("cssnano")({
-            preset: [
-              "default",
-              {
-                discardComments: { removeAll: true },
-                calc: false
-              }
-            ]
-          })
-        ])
-      )
+      .pipe(gulpPostcss(postcssPlugins))
       .pipe(
         gulpIf(
           opt.isUseOSS,

@@ -104,7 +104,7 @@ module.exports = (api, userOptions) => {
       ]
         .filter(item => item.enabled)
         .map(({ name, ext }) => {
-          const task = require("../gulp/" + name)(baseOpt);
+          const task = require("../gulp/" + name)(baseOpt, userOptions);
           // 监听模式
           args.watch && gulp.watch(`src/**/*${ext}`, task);
           return task;

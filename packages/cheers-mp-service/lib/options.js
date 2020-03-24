@@ -50,15 +50,15 @@ const schema = createSchema(joi =>
     // 是否在开发环境下通过 eslint 在每次保存时 lint 代码(未实现)
     lintOnSave: joi.any().valid([true, false, "error"]),
 
-    // css
+    // css预处理器
     css: joi.object({
-      modules: joi.boolean(),
-      options: joi.object({
-        sass: joi.object(),
-        scss: joi.object(),
-        less: joi.object(),
-        postcss: joi.object(),
-        px2rpx: joi.object()
+      sass: joi.object(),
+      scss: joi.object(),
+      less: joi.object(),
+      postcss: joi.object(),
+      px2rpx: joi.object({
+        rpxUnit: joi.number().integer(),
+        rpxPrecision: joi.number().integer()
       })
     }),
 
@@ -77,9 +77,6 @@ exports.defaults = () => ({
     type: "",
     options: {}
   },
-  css: {
-    modules: false,
-    loaderOptions: {}
-  },
+  css: {},
   lintOnSave: true
 });

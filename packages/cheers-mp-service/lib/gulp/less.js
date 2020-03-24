@@ -37,12 +37,11 @@ function less(opt, userOptions) {
     );
   }
 
-  console.log("使用的插件", postcssPlugins);
   function compileLESS() {
     return gulp
       .src(`${opt.srcDir}/**/*.less`, { since: gulp.lastRun(compileLESS) })
 
-      .pipe(gulpLess())
+      .pipe(gulpLess(userOptions.css.less))
       .pipe(gulpPostcss(postcssPlugins))
       .pipe(
         gulpIf(

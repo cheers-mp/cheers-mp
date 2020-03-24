@@ -54,6 +54,8 @@ const schema = createSchema(joi =>
     css: joi.object({
       sass: joi.object(),
       scss: joi.object(),
+
+      /** 这里选项将传给 less http://lesscss.org/usage/#command-line-usage-options */
       less: joi.object(),
 
       /** postcss 插件数组 */

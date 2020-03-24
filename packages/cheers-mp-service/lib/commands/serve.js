@@ -89,6 +89,7 @@ module.exports = (api, userOptions) => {
       // 其他并行编译任务
       const compilerTask = [
         { name: "less", ext: ".less", enabled: true },
+        { name: "sass", ext: ".{scss,sass}", enabled: true },
         { name: "wxss", ext: ".wxss", enabled: true },
         { name: "ts", ext: ".ts", enabled: fs.existsSync(baseOpt.tsConfig) },
         { name: "js", ext: ".js", enabled: true },

@@ -55,7 +55,11 @@ const schema = createSchema(joi =>
       sass: joi.object(),
       scss: joi.object(),
       less: joi.object(),
-      postcss: joi.object(),
+
+      /** postcss 插件数组 */
+      postcss: joi.array(),
+
+      /** px单位转rpx单位 */
       px2rpx: joi.object({
         rpxUnit: joi.number().integer(),
         rpxPrecision: joi.number().integer()

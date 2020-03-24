@@ -17,6 +17,9 @@ const defaultOpt = {
 function less(opt, userOptions) {
   opt = deepmerge(defaultOpt, opt);
   const postcssPlugins = [];
+  if (Array.isArray(userOptions.css.postcss) && userOptions.css.postcss.length > 0) {
+    postcssPlugins.push(...userOptions.css.postcss);
+  }
   if (userOptions.css.px2rpx) {
     postcssPlugins.push(px2rpx(userOptions.css.px2rpx));
   }
@@ -33,6 +36,8 @@ function less(opt, userOptions) {
       })
     );
   }
+
+  console.log("使用的插件", postcssPlugins);
   function compileLESS() {
     return gulp
       .src(`${opt.srcDir}/**/*.less`, { since: gulp.lastRun(compileLESS) })

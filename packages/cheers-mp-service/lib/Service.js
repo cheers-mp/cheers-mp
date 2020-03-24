@@ -86,7 +86,7 @@ module.exports = class Service {
    * @param {String} mode 模式名
    * @description 同名环境变量优先级： .env.模式名.local > .env.模式名 > .env.local > .env
    */
-  loadEnv(mode) {
+  loadEnv(mode, commandName) {
     const basePath = path.resolve(this.context, `.env${mode ? `.${mode}` : ``}`);
     const localPath = `${basePath}.local`;
 
@@ -105,11 +105,15 @@ module.exports = class Service {
     load(localPath);
     load(basePath);
 
-    // by default, NODE_ENV and BABEL_ENV are set to "development" unless mode
-    // is production or test. However the value in .env files will take higher
-    // priority.
+    // 1.如果指定的模式是默认的三种模式之一，并且模式对应的.env文件里没有设置NODE_ENV,那么NODE_ENV=模式名;
+    // 2.如果指定的模式不是默认的三种模式之一，并且模式对应的.env文件里没有设置NODE_ENV,那么NODE_ENV取决于命令，
+    //  build命令NODE_ENV=production，serve命令NODE_ENV=development,其它命令NODE_ENV=development;
     if (mode) {
-      const defaultNodeEnv = mode === "production" || mode === "test" ? mode : "development";
+      const defaultNodeEnv = ["production", "test", "development"].includes(mode)
+        ? mode
+        : commandName === "build"
+        ? "production"
+        : "development";
       if (process.env.NODE_ENV == null) {
         process.env.NODE_ENV = defaultNodeEnv;
       }
@@ -156,7 +160,7 @@ module.exports = class Service {
     return fileConfig;
   }
 
-  init(mode) {
+  init(mode, commandName) {
     if (this.initialized) {
       return;
     }
@@ -164,7 +168,7 @@ module.exports = class Service {
     this.mode = mode;
     // load mode .env
     if (mode) {
-      this.loadEnv(mode);
+      this.loadEnv(mode, commandName);
     }
     // load base .env
     this.loadEnv();
@@ -185,7 +189,7 @@ module.exports = class Service {
     args.platform = process.env.PLATFORM;
 
     // 载入环境变量、用户配置(cheers.config.js)、挂载插件
-    this.init(mode);
+    this.init(mode, name);
 
     // 将用户输入的命令和插件注册命令匹配，如果存在则执行相应的回调函数
     args._ = args._ || [];

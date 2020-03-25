@@ -20,24 +20,24 @@ function ts(opt, userOptions) {
   const isProd = process.env.NODE_ENV === "production";
   const productionSourceMap = isProd && userOptions.productionSourceMap;
 
-  const jsCompressTask = lazypipe().pipe(function() {
+  const jsCompressLazy = lazypipe().pipe(function() {
     return gulpIf(isProd, require("gulp-terser")());
   });
 
-  const sourcemapsInit = lazypipe().pipe(gulpSourcemaps.init);
-  const sourcemapsWrite = lazypipe().pipe(gulpSourcemaps.write);
+  const sourcemapsInitLazy = lazypipe().pipe(gulpSourcemaps.init);
+  const sourcemapsWriteLazy = lazypipe().pipe(gulpSourcemaps.write);
 
   function compileTS() {
-    // TODO 如果ts 的target 是es5，则输出sourcemaps
+    // TODO 如果ts 的target 是es5，则开发模式下默认输出sourcemaps
     const env = gulpReplaces(resolveClientEnv());
     return gulp
       .src(`${opt.srcDir}/**/*.ts`, { since: gulp.lastRun(compileTS) })
       .pipe(gulpAlias({ configuration: tsProject.config }))
-      .pipe(gulpIf(productionSourceMap, sourcemapsInit()))
+      .pipe(gulpIf(productionSourceMap, sourcemapsInitLazy()))
       .pipe(tsProject())
       .pipe(env)
-      .pipe(jsCompressTask())
-      .pipe(gulpIf(productionSourceMap, sourcemapsWrite()))
+      .pipe(jsCompressLazy())
+      .pipe(gulpIf(productionSourceMap, sourcemapsWriteLazy()))
       .pipe(gulp.dest(opt.outputDir));
   }
   compileTS.displayName = "编译typescript";

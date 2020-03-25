@@ -1,7 +1,7 @@
-const fs = require("fs-extra");
+const { emptyDir } = require("fs-extra");
 const cleaner = path => {
   function clean() {
-    return fs.remove(path);
+    return emptyDir(path);
   }
   clean.displayName = "清空输出目录";
   return clean;

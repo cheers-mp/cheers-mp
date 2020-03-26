@@ -156,8 +156,8 @@ class ALIOSS {
   }
 
   /** 上传文件 */
-  async upload(objectName, localFile) {
-    const res = await this.client.put(objectName, localFile);
+  upload(objectName, localFile) {
+    return this.client.put(objectName, localFile);
     /* 
     {
       name: '',
@@ -168,7 +168,7 @@ class ALIOSS {
         statusMessage: 'OK'
     }
     } */
-    console.log("上传结果", res);
+    // console.log("上传结果", res);
   }
 }
 
@@ -227,7 +227,7 @@ class QINIUOSS {
     });
   }
 
-  async upload(objectName, localFile) {
+  upload(objectName, localFile) {
     return new Promise((resolve, reject) => {
       // 文件上传
       this.formUploader.putFile(this.uploadToken, objectName, localFile, this.putExtra, function(respErr) {

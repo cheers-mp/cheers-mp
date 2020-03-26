@@ -1,11 +1,7 @@
 # `cheers-mp-service`
 
-> TODO: description
+Almost 零配置小程序工程化脚手架
 
-## Usage
+## 使用
 
-```
-const cheersMpService = require('cheers-mp-service');
-
-// TODO: DEMONSTRATE API
-```
+使用文档见： https://bigmeow.github.io/cheers-mp/

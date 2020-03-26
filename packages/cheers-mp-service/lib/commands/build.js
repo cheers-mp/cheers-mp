@@ -84,7 +84,7 @@ module.exports = (api, userOptions) => {
           proxy: {
             port: 8888
           },
-          oss: userOptions.oss.options
+          oss: userOptions.oss
         });
         prepareImage = imageOperator.upload;
         prepareImage.displayName = "上传项目中使用的图片到oss";

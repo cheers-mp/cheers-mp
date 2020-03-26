@@ -2,10 +2,13 @@ const { createSchema, validate } = require("../utils/validate");
 
 const schema = createSchema(joi =>
   joi.object({
-    /** 配置阿里云、七牛云存储（未实现） */
+    /** 配置阿里云、七牛云存储 */
     oss: joi
       .object({
-        type: joi.any().valid(["ALI", "QINIU"]),
+        type: joi
+          .any()
+          .valid(["ALI", "QINIU"])
+          .required(),
         options: joi.object().required()
       })
       .allow(""),

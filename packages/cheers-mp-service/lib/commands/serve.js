@@ -79,7 +79,7 @@ module.exports = (api, userOptions) => {
           proxy: {
             port: 8888
           },
-          oss: userOptions.oss.options
+          oss: userOptions.oss
         });
         prepareImage = imageOperator.proxy;
         prepareImage.displayName = "预处理图片";

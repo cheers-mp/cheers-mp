@@ -3,17 +3,34 @@
   "version": "1.1.0",
   "description": "生成小程序脚手架模板",
   "author": "lizong <running@vip.163.com>",
-  "homepage": "https://github.com/bigmeow/cheers-mp",
+  "homepage": "https://github.com/bigmeow/cheers-mp-cli",
   "license": "MIT",
-  "main": "lib/cheers-mp-cli.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+  "main": "./bin/cli.js",
+  "bin": {
+    "cheers": "./bin/cli.js"
+  },
+  "scripts": {
+    "postinstall": "node util/welcome"
   },
   "files": [
-    "lib"
+    "bin",
+    "util"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "cac": "^6.5.2",
+    "chalk": "^2.4.2",
+    "compare-versions": "^3.5.1",
+    "latest-version": "^5.1.0",
+    "minimist": "^1.2.0",
+    "ora": "^3.4.0",
+    "postinstall": "^0.5.1",
+    "sao": "^1.7.0",
+    "semver": "^6.3.0"
+  },
+  "engines": {
+    "node": ">=10"
   }
 }

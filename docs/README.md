@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: ./logo.png
+heroImage: ./logo2.png
 heroText: Cheers-mp🍻
 tagline: Almost 零配置小程序脚手架 (゜-゜)つロ 干杯~
 actionText: 打架体验中 →

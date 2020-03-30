@@ -2,6 +2,7 @@ const gulp = require("gulp");
 const path = require("path");
 const fs = require("fs-extra");
 const gulpInstall = require("gulp-install");
+const deepmerge = require("deepmerge");
 const formatDate = require("../../utils/date");
 
 /**
@@ -16,6 +17,8 @@ const installAndBuilder = (opt, userOptions, args) => {
 
   /** 项目根目录下的小程序开发者工具配置文件 */
   const projectConfigJson = require(path.join(opt.context, "project.config.json"));
+
+  const uploadSetting = getUploadConfig(projectConfigJson);
 
   const ciOpt = userOptions.compiler.options;
 
@@ -54,8 +57,7 @@ const installAndBuilder = (opt, userOptions, args) => {
       project,
       version: formatDate(new Date(), "yyyy.MM.ddhhmmss"),
       desc: "ci机器人自动上传于" + new Date().toLocaleString(),
-      setting: projectConfigJson.setting,
-      onProgressUpdate: console.log
+      setting: uploadSetting
     });
   }
   upload.displayName = "调用CI包的“上传代码”服务";
@@ -67,5 +69,45 @@ const installAndBuilder = (opt, userOptions, args) => {
 
   return gulp.series(...taskSync);
 };
+
+/**
+ * 从配置文件中读取出上传需要的配置
+ */
+function getUploadConfig(projectConfigJson) {
+  const uploadSetting = {};
+  /** project.config.json的的setting字段和 miniprogram-ci 上传配置映射*/
+  const mapping = {
+    /** "es6 转 es5" */
+    es6: "es6",
+    /** "增强编译" */
+    enhance: "es7",
+    /** "上传时样式自动补全"  */
+    postcss: "autoPrefixWXSS",
+    /** "上传时压缩代码" */
+    minified: "minify",
+    /** "上传时进行代码保护" */
+    uglifyFileName: "codeProtect"
+  };
+  for (m in mapping) {
+    uploadSetting[mapping[m]] = projectConfigJson.setting[m];
+  }
+
+  return deepmerge(
+    {
+      es6: true,
+      es7: true,
+      /** 上传时压缩 JS 代码 */
+      minifyJS: true,
+      /** 上传时压缩 WXML 代码 */
+      minifyWXML: true,
+      /**上传时压缩 WXSS 代码 */
+      minifyWXSS: true,
+      minify: true,
+      codeProtect: false,
+      autoPrefixWXSS: true
+    },
+    uploadSetting
+  );
+}
 
 module.exports = installAndBuilder;

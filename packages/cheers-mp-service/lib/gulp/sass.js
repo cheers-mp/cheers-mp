@@ -13,7 +13,7 @@ const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
   isUseOSS: false,
-  rewriter: url => url
+  rewriter: (url) => url,
 };
 
 function sass(opt, userOptions) {
@@ -38,9 +38,9 @@ function sass(opt, userOptions) {
           "default",
           {
             discardComments: { removeAll: true },
-            calc: false
-          }
-        ]
+            calc: false,
+          },
+        ],
       })
     );
   }
@@ -55,7 +55,7 @@ function sass(opt, userOptions) {
         gulpIf(
           opt.isUseOSS,
           gulpCDN({
-            rewriter: opt.rewriter
+            rewriter: opt.rewriter,
           })
         )
       )

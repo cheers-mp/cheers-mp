@@ -6,7 +6,7 @@ const { log, done } = require("../../utils/logger");
 const defaults = {
   clean: true,
   watch: false,
-  upload: false
+  upload: false,
 };
 
 module.exports = (api, userOptions) => {
@@ -19,8 +19,8 @@ module.exports = (api, userOptions) => {
         "--mode": `指定 env 文件模式 (默认: development)`,
         "--clean": "是否每次编译前先清空处理掉输出目录(默认: true)",
         "--watch": "开启监听模式,默认关闭",
-        "--upload": "编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭"
-      }
+        "--upload": "编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭",
+      },
     },
     async function build(args) {
       for (const key in defaults) {
@@ -49,7 +49,7 @@ module.exports = (api, userOptions) => {
 
         isUseOSS: !!(userOptions.oss && userOptions.oss.options),
 
-        rewriter: url => url
+        rewriter: (url) => url,
       };
 
       if (args.clean) {
@@ -66,7 +66,7 @@ module.exports = (api, userOptions) => {
         // 预处理图片
         let imageOperator, prepareImage;
         // 处理文件内匹配到的图片url
-        baseOpt.rewriter = url => {
+        baseOpt.rewriter = (url) => {
           if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_") > -1) {
             return url;
           }
@@ -82,9 +82,9 @@ module.exports = (api, userOptions) => {
         imageOperator = require("cheers-mp-images")({
           target: baseOpt.srcDir,
           proxy: {
-            port: 8888
+            port: 8888,
           },
-          oss: userOptions.oss
+          oss: userOptions.oss,
         });
         prepareImage = imageOperator.upload;
         prepareImage.displayName = "上传项目中使用的图片到oss";
@@ -101,9 +101,9 @@ module.exports = (api, userOptions) => {
         { name: "wxml", ext: ".wxml", enabled: true },
         { name: "json", ext: ".json", enabled: true },
         { name: "wxs", ext: ".wxs", enabled: true },
-        { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}", enabled: true }
+        { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}", enabled: true },
       ]
-        .filter(item => item.enabled)
+        .filter((item) => item.enabled)
         .map(({ name, ext }) => {
           const task = require("../gulp/" + name)(baseOpt, userOptions);
           // 监听模式
@@ -121,7 +121,7 @@ module.exports = (api, userOptions) => {
         taskArr.push(installAndBuilderTask);
       }
 
-      gulp.series(taskArr)(err => {
+      gulp.series(taskArr)((err) => {
         err && process.exit(1);
         log();
         done("任务完成~（＾∀＾）");
@@ -131,5 +131,5 @@ module.exports = (api, userOptions) => {
 };
 
 module.exports.defaultModes = {
-  build: "production"
+  build: "production",
 };

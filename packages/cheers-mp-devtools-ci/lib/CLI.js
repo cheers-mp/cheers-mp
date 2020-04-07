@@ -92,7 +92,7 @@ class CLI {
             "upload",
             IF(projectPath, `--project "${projectPath}"`),
             IF(version, `-v ${version}`),
-            IF(remark, `-d "${remark}"`)
+            IF(remark, `-d "${remark}"`),
           ].join("");
     return this._exec(commandStr);
   }

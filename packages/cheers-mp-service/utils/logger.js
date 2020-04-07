@@ -11,7 +11,7 @@ const format = (label, msg) => {
     .join("\n");
 };
 
-const chalkTag = msg => chalk.bgBlackBright.white.dim(` ${msg} `);
+const chalkTag = (msg) => chalk.bgBlackBright.white.dim(` ${msg} `);
 
 exports.log = (msg = "", tag = null) => {
   tag ? console.log(format(chalkTag(tag), msg)) : console.log(msg);
@@ -44,7 +44,7 @@ exports.error = (msg, tag = null) => {
   }
 };
 
-exports.clearConsole = title => {
+exports.clearConsole = (title) => {
   if (process.stdout.isTTY) {
     const blank = "\n".repeat(process.stdout.rows);
     console.log(blank);

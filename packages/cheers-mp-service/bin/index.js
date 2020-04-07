@@ -19,12 +19,12 @@ const args = require("minimist")(process.argv.slice(2), {
     "no-watch",
     "upload",
     // serve
-    "open"
-  ]
+    "open",
+  ],
 });
 const command = args._[0];
 
-service.run(command, args, rawArgv).catch(err => {
+service.run(command, args, rawArgv).catch((err) => {
   error(err);
   process.exit(1);
 });

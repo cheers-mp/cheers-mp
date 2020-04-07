@@ -6,7 +6,7 @@ const { log, info } = require("../../utils/logger");
 const defaults = {
   clean: true,
   upload: false,
-  open: false
+  open: false,
 };
 
 module.exports = (api, userOptions) => {
@@ -17,8 +17,8 @@ module.exports = (api, userOptions) => {
       usage: "cheers-mp-service serve [options] [entry]",
       options: {
         "--mode": `指定 env 文件模式 (默认: development)`,
-        "--open": `编译后自动在开发者工具中打开项目(仅compiler.type为hard时生效)`
-      }
+        "--open": `编译后自动在开发者工具中打开项目(仅compiler.type为hard时生效)`,
+      },
     },
     async function serve(args) {
       for (const key in defaults) {
@@ -46,7 +46,7 @@ module.exports = (api, userOptions) => {
 
         isUseOSS: !!(userOptions.oss && userOptions.oss.options),
 
-        rewriter: url => url
+        rewriter: (url) => url,
       };
 
       // 清空输出目录
@@ -61,7 +61,7 @@ module.exports = (api, userOptions) => {
         // 预处理图片
         let imageOperator, prepareImage;
         // 处理文件内匹配到的图片url
-        baseOpt.rewriter = url => {
+        baseOpt.rewriter = (url) => {
           if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_") > -1) {
             return url;
           }
@@ -77,9 +77,9 @@ module.exports = (api, userOptions) => {
         imageOperator = require("cheers-mp-images")({
           target: baseOpt.srcDir,
           proxy: {
-            port: 8888
+            port: 8888,
           },
-          oss: userOptions.oss
+          oss: userOptions.oss,
         });
         prepareImage = imageOperator.proxy;
         prepareImage.displayName = "预处理图片";
@@ -96,9 +96,9 @@ module.exports = (api, userOptions) => {
         { name: "wxml", ext: ".wxml", enabled: true },
         { name: "json", ext: ".json", enabled: true },
         { name: "wxs", ext: ".wxs", enabled: true },
-        { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}", enabled: true }
+        { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}", enabled: true },
       ]
-        .filter(item => item.enabled)
+        .filter((item) => item.enabled)
         .map(({ name, ext }) => {
           const task = require("../gulp/" + name)(baseOpt, userOptions);
           // 监听模式
@@ -116,7 +116,7 @@ module.exports = (api, userOptions) => {
         taskArr.push(installAndBuilderTask);
       }
 
-      await gulp.series(taskArr)(err => {
+      await gulp.series(taskArr)((err) => {
         err && process.exit(1);
         log();
         info("正在监听文件改动...");
@@ -126,5 +126,5 @@ module.exports = (api, userOptions) => {
 };
 
 module.exports.defaultModes = {
-  serve: "development"
+  serve: "development",
 };

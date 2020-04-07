@@ -26,20 +26,20 @@ function formatError(e) {
 function logEvents(gulpInst) {
   const loggedErrors = [];
 
-  gulpInst.on("start", function(evt) {
+  gulpInst.on("start", function (evt) {
     if (["watch", "<series>", "<parallel>"].includes(evt.name)) return;
     log();
     start("'" + evt.name + "'...");
   });
 
-  gulpInst.on("stop", function(evt) {
+  gulpInst.on("stop", function (evt) {
     if (["watch", "<series>", "<parallel>"].includes(evt.name)) return;
     const time = prettyTime(evt.duration);
     log();
     done("'" + evt.name + "'耗时" + time);
   });
 
-  gulpInst.on("error", function(evt) {
+  gulpInst.on("error", function (evt) {
     const msg = formatError(evt);
     const time = prettyTime(evt.duration);
     error("'" + evt.name + "' errored after" + time);

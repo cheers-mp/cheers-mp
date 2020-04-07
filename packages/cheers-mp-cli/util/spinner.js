@@ -12,22 +12,22 @@ exports.logWithSpinner = (symbol, msg) => {
   if (lastMsg) {
     spinner.stopAndPersist({
       symbol: lastMsg.symbol,
-      text: lastMsg.text
+      text: lastMsg.text,
     });
   }
   spinner.text = " " + msg;
   lastMsg = {
     symbol: symbol + " ",
-    text: msg
+    text: msg,
   };
   spinner.start();
 };
 
-exports.stopSpinner = persist => {
+exports.stopSpinner = (persist) => {
   if (lastMsg && persist !== false) {
     spinner.stopAndPersist({
       symbol: lastMsg.symbol,
-      text: lastMsg.text
+      text: lastMsg.text,
     });
   } else {
     spinner.stop();

@@ -44,9 +44,9 @@ const installAndBuilder = (opt, userOptions, args) => {
 
   async function buildNPM() {
     const warning = await ci.packNpm(project, {
-      reporter: infos => {
+      reporter: (infos) => {
         console.log(infos);
-      }
+      },
     });
     return Promise.resolve(warning);
   }
@@ -57,7 +57,7 @@ const installAndBuilder = (opt, userOptions, args) => {
       project,
       version: formatDate(new Date(), "yyyy.MM.ddhhmmss"),
       desc: "ci机器人自动上传于" + new Date().toLocaleString(),
-      setting: uploadSetting
+      setting: uploadSetting,
     });
   }
   upload.displayName = "调用CI包的“上传代码”服务";
@@ -86,9 +86,9 @@ function getUploadConfig(projectConfigJson) {
     /** "上传时压缩代码" */
     minified: "minify",
     /** "上传时进行代码保护" */
-    uglifyFileName: "codeProtect"
+    uglifyFileName: "codeProtect",
   };
-  for (m in mapping) {
+  for (const m in mapping) {
     uploadSetting[mapping[m]] = projectConfigJson.setting[m];
   }
 
@@ -104,7 +104,7 @@ function getUploadConfig(projectConfigJson) {
       minifyWXSS: true,
       minify: true,
       codeProtect: false,
-      autoPrefixWXSS: true
+      autoPrefixWXSS: true,
     },
     uploadSetting
   );

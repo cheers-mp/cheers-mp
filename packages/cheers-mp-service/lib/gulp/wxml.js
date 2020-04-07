@@ -7,7 +7,7 @@ const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
   isUseOSS: false,
-  rewriter: url => url
+  rewriter: (url) => url,
 };
 
 function wxml(opt) {
@@ -21,9 +21,9 @@ function wxml(opt) {
           opt.isUseOSS,
           gulpCDN({
             html: {
-              "image[src]": "src"
+              "image[src]": "src",
             },
-            rewriter: opt.rewriter
+            rewriter: opt.rewriter,
           })
         )
       )

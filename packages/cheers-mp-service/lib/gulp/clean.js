@@ -1,5 +1,5 @@
 const { emptyDir } = require("fs-extra");
-const cleaner = path => {
+const cleaner = (path) => {
   function clean() {
     return emptyDir(path);
   }

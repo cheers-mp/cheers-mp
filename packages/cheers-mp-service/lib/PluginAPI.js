@@ -41,7 +41,7 @@ module.exports = class PluginAPI {
       const pkg = this.service.pkg;
       return (pkg.dependencies && pkg.dependencies[id]) || (pkg.devDependencies && pkg.devDependencies[id]);
     }
-    return this.service.plugins.some(p => matchesPluginId(id, p.id));
+    return this.service.plugins.some((p) => matchesPluginId(id, p.id));
   }
 
   /**
@@ -51,7 +51,9 @@ module.exports = class PluginAPI {
    */
   hasPackage(packageName) {
     const pkg = this.service.pkg;
-    return (pkg.dependencies && pkg.dependencies[packageName]) || (pkg.devDependencies && pkg.devDependencies[packageName]);
+    return (
+      (pkg.dependencies && pkg.dependencies[packageName]) || (pkg.devDependencies && pkg.devDependencies[packageName])
+    );
   }
 
   /**
@@ -83,18 +85,18 @@ module.exports = class PluginAPI {
     const cacheDirectory = this.resolve(`node_modules/.cache/${id}`);
 
     // replace \r\n to \n generate consistent hash
-    const fmtFunc = conf => {
-      if (typeof conf === "function") {
-        return conf.toString().replace(/\r\n?/g, "\n");
-      }
-      return conf;
-    };
+    // const fmtFunc = (conf) => {
+    //   if (typeof conf === "function") {
+    //     return conf.toString().replace(/\r\n?/g, "\n");
+    //   }
+    //   return conf;
+    // };
 
     const variables = {
       partialIdentifier,
       service: require("../package.json").version,
       "cache-loader": require("cache-loader/package.json").version,
-      env: process.env.NODE_ENV
+      env: process.env.NODE_ENV,
     };
 
     if (!Array.isArray(configFiles)) {
@@ -102,7 +104,7 @@ module.exports = class PluginAPI {
     }
     configFiles = configFiles.concat(["package-lock.json", "yarn.lock", "pnpm-lock.yaml"]);
 
-    const readConfig = file => {
+    const readConfig = (file) => {
       const absolutePath = this.resolve(file);
       if (!fs.existsSync(absolutePath)) {
         return;

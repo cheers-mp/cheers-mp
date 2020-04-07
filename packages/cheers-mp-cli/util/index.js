@@ -3,5 +3,5 @@ const help = require("./help");
 
 module.exports = {
   version,
-  help
+  help,
 };

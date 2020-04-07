@@ -7,7 +7,7 @@ const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
   isUseOSS: false,
-  rewriter: url => url
+  rewriter: (url) => url,
 };
 
 function wxss(opt) {
@@ -20,7 +20,7 @@ function wxss(opt) {
         gulpIf(
           opt.isUseOSS,
           gulpCDN({
-            rewriter: opt.rewriter
+            rewriter: opt.rewriter,
           })
         )
       )

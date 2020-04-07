@@ -1,7 +1,7 @@
-exports.createSchema = fn => fn(require("@hapi/joi"));
+exports.createSchema = (fn) => fn(require("@hapi/joi"));
 
 exports.validate = (obj, schema, cb) => {
-  require("@hapi/joi").validate(obj, schema, {}, err => {
+  require("@hapi/joi").validate(obj, schema, {}, (err) => {
     if (err) {
       cb(err.message);
       process.exit(1);

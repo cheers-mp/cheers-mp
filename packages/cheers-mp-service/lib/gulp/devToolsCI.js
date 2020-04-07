@@ -50,7 +50,7 @@ const installAndBuilder = async (opt, userOptions, args) => {
   open.displayName = "在本地开发者工具中打开项目";
 
   async function upload() {
-    res = await instance.upload(opt.context, formatDate(new Date(), "yyyy.MM.ddhhmmss"), "自动构建上传测试");
+    const res = await instance.upload(opt.context, formatDate(new Date(), "yyyy.MM.ddhhmmss"), "自动构建上传测试");
     console.log(res.stderr);
     console.log(res.stdout);
   }

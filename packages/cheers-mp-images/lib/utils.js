@@ -3,9 +3,9 @@ const md5 = require("md5");
 const path = require("path");
 const os = require("os");
 
-exports.normalize = pathStr => pathStr.split(path.sep).join("/");
+exports.normalize = (pathStr) => pathStr.split(path.sep).join("/");
 
-exports.getHash = localPath => {
+exports.getHash = (localPath) => {
   const file = fs.readFileSync(localPath);
   return md5(file);
 };

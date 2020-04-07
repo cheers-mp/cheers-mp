@@ -4,7 +4,7 @@ const deepmerge = require("deepmerge");
 const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
-  isUseOSS: false
+  isUseOSS: false,
 };
 const IMAGE_EXT = "{jpg,jpeg,png,gif,bmp,webp}";
 

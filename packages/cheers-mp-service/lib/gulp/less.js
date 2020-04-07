@@ -11,7 +11,7 @@ const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
   isUseOSS: false,
-  rewriter: url => url
+  rewriter: (url) => url,
 };
 
 function less(opt, userOptions) {
@@ -30,9 +30,9 @@ function less(opt, userOptions) {
           "default",
           {
             discardComments: { removeAll: true },
-            calc: false
-          }
-        ]
+            calc: false,
+          },
+        ],
       })
     );
   }
@@ -47,7 +47,7 @@ function less(opt, userOptions) {
         gulpIf(
           opt.isUseOSS,
           gulpCDN({
-            rewriter: opt.rewriter
+            rewriter: opt.rewriter,
           })
         )
       )

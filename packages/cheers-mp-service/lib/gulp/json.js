@@ -3,7 +3,7 @@ const deepmerge = require("deepmerge");
 
 const defaultOpt = {
   srcDir: "src",
-  outputDir: "dist"
+  outputDir: "dist",
 };
 function json(opt) {
   opt = deepmerge(defaultOpt, opt);

@@ -2,13 +2,13 @@ const pluginRE = /^(@cheers-mp\/|cheers-mp-|@[\w-]+\/cheers-mp-)plugin-/;
 const scopeRE = /^@[\w-]+\//;
 const officialRE = /^@cheers-mp\//;
 
-exports.isPlugin = id => pluginRE.test(id);
+exports.isPlugin = (id) => pluginRE.test(id);
 
-exports.isOfficialPlugin = id => exports.isPlugin(id) && officialRE.test(id);
+exports.isOfficialPlugin = (id) => exports.isPlugin(id) && officialRE.test(id);
 
-exports.toShortPluginId = id => id.replace(pluginRE, "");
+exports.toShortPluginId = (id) => id.replace(pluginRE, "");
 
-exports.resolvePluginId = id => {
+exports.resolvePluginId = (id) => {
   // already full id
   // e.g. cheers-mp-plugin-foo, @cheers-mp/plugin-foo, @bar/cheers-mp-plugin-foo
   if (pluginRE.test(id)) {

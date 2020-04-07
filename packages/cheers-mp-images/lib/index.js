@@ -30,7 +30,7 @@ interface Config {
 }
 */
 
-const ImageOperator = config => {
+const ImageOperator = (config) => {
   const ip = getIPAddress();
   return {
     upload: () => {
@@ -38,13 +38,13 @@ const ImageOperator = config => {
     },
     proxy: () => createServer({ ip, ...config.proxy, target: config.target }),
     /** 获取本地代理地址 */
-    getProxyURI: localFile => {
+    getProxyURI: (localFile) => {
       const { port } = config.proxy;
       let relativePath = normalize(localFile);
       return `http://${ip}:${port}/${relativePath}`;
     },
     /** 上传成功后，获取上传后的图片地址 */
-    getNetURI: localFile => {
+    getNetURI: (localFile) => {
       const { type, options } = config.oss;
       const ext = localFile.split(".").reverse()[0];
       const hash = getHash(localFile);
@@ -58,7 +58,7 @@ const ImageOperator = config => {
         // 七牛云oss不支持目录划分
         return `${options.https ? "https" : "http"}://${domain}/${options.prefix}_${hash}.${ext}`;
       }
-    }
+    },
   };
 };
 

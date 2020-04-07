@@ -49,9 +49,9 @@ module.exports = class Service {
   }
 
   resolvePlugins() {
-    const idToPlugin = id => ({
+    const idToPlugin = (id) => ({
       id: id.replace(/^.\//, "built-in:"),
-      apply: require(id)
+      apply: require(id),
     });
 
     let plugins;
@@ -61,7 +61,7 @@ module.exports = class Service {
     const projectPlugins = Object.keys(this.pkg.devDependencies || {})
       .concat(Object.keys(this.pkg.dependencies || {}))
       .filter(isPlugin)
-      .map(id => idToPlugin(id));
+      .map((id) => idToPlugin(id));
     plugins = builtInPlugins.concat(projectPlugins);
 
     // 项目本地的插件
@@ -71,9 +71,9 @@ module.exports = class Service {
         throw new Error(`无效的类型选项 'cheersPlugins.service', 期望得到 'array' 但是得到了 ${typeof files}.`);
       }
       plugins = plugins.concat(
-        files.map(file => ({
+        files.map((file) => ({
           id: `local:${file}`,
-          apply: loadModule(file, this.pkgContext)
+          apply: loadModule(file, this.pkgContext),
         }))
       );
     }
@@ -90,7 +90,7 @@ module.exports = class Service {
     const basePath = path.resolve(this.context, `.env${mode ? `.${mode}` : ``}`);
     const localPath = `${basePath}.local`;
 
-    const load = path => {
+    const load = (path) => {
       try {
         const res = dotenv.config({ path });
         dotenvExpand(res);
@@ -153,7 +153,7 @@ module.exports = class Service {
     }
 
     // 校验选项
-    validate(fileConfig, msg => {
+    validate(fileConfig, (msg) => {
       error(`Invalid options in ${chalk.bold("cheers.config.js")}: ${msg}`);
     });
 

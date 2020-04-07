@@ -38,7 +38,7 @@ class Operator {
     }
     this.alreadyUpList = {
       ready: false,
-      info: []
+      info: [],
     };
     this.allReady = false;
   }
@@ -58,53 +58,51 @@ class Operator {
     const patterns = `${target}/**/*.**`;
     const queue = glob
       .sync(patterns, { matchBase: true })
-      .filter(file => {
+      .filter((file) => {
         // 排除LOCAL_开头的文件
         return this.fileType.test(file) && /^[^LOCAL_]/g.test(path.basename(file));
       })
-      .map(file => normalize(file)); // 路径规范化，避免不同的电脑操作系统产生差异
+      .map((file) => normalize(file)); // 路径规范化，避免不同的电脑操作系统产生差异
     return queue;
   }
   // 上传文件
-  upFiles() {
-    return new Promise(async resolve => {
-      try {
-        const relative = require("relative");
-        const { normalize, getHash } = require("./utils");
-        const queue = this.getupFileQueue();
-        let count = queue.length;
-        if (count === 0) {
-          resolve();
-        }
-        for (let i = 0; i < queue.length; i++) {
-          const localFile = normalize(queue[i]);
-          const ext = localFile.split(".").reverse()[0];
-          const hash = getHash(localFile);
-          const objectName = `${this.prefix}${this.spliter}${hash}.${ext}`;
-          const relativePath = normalize(relative(__dirname, localFile)).replace(/\.\.(\/)/g, "");
-          const upStatus = await this.client.checkFileUpStatus(objectName);
-          if (!upStatus) {
-            console.log(chalk.yellow(`\n----${relativePath}没有在上传记录中，已进入上传队列...\n`));
+  async upFiles() {
+    try {
+      const relative = require("relative");
+      const { normalize, getHash } = require("./utils");
+      const queue = this.getupFileQueue();
+      let count = queue.length;
+      if (count === 0) {
+        return Promise.resolve();
+      }
+      for (let i = 0; i < queue.length; i++) {
+        const localFile = normalize(queue[i]);
+        const ext = localFile.split(".").reverse()[0];
+        const hash = getHash(localFile);
+        const objectName = `${this.prefix}${this.spliter}${hash}.${ext}`;
+        const relativePath = normalize(relative(__dirname, localFile)).replace(/\.\.(\/)/g, "");
+        const upStatus = await this.client.checkFileUpStatus(objectName);
+        if (!upStatus) {
+          console.log(chalk.yellow(`\n----${relativePath}没有在上传记录中，已进入上传队列...\n`));
 
-            await this.client.upload(objectName, localFile);
-            console.log(chalk.green.bold(`\ntips: => ${relativePath} upload success!\n`));
-            if (--count === 0) {
-              this.allReady = true;
-              // console.log(chalk.yellow.bold(`\nOSS图片资源全部准备就绪！`))
-              resolve();
-            }
-          } else {
-            if (--count === 0) {
-              this.allReady = true;
-              // console.log(chalk.yellow.bold(`\nOSS图片资源全部准备就绪！`))
-              resolve();
-            }
+          await this.client.upload(objectName, localFile);
+          console.log(chalk.green.bold(`\ntips: => ${relativePath} 上传成功!\n`));
+          if (--count === 0) {
+            this.allReady = true;
+            // console.log(chalk.yellow.bold(`\nOSS图片资源全部准备就绪！`))
+            return Promise.resolve();
+          }
+        } else {
+          if (--count === 0) {
+            this.allReady = true;
+            // console.log(chalk.yellow.bold(`\nOSS图片资源全部准备就绪！`))
+            return Promise.resolve();
           }
         }
-      } catch (e) {
-        console.log(e);
       }
-    });
+    } catch (e) {
+      console.log(e);
+    }
   }
   printStatus() {
     if (this.allReady) {
@@ -115,7 +113,7 @@ class Operator {
   }
 }
 
-exports.UploadClient = async function(config, target) {
+exports.UploadClient = async function (config, target) {
   const operator = new Operator(config, target);
   await operator.upFiles();
   // 在 done 事件中回调 doneCallback
@@ -135,17 +133,17 @@ class ALIOSS {
 
   /** 检查文件是否在云存储空间已经存在  */
   checkFileUpStatus(objectName) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.client
         .get(objectName)
-        .then(result => {
+        .then((result) => {
           if (result.res.status === 200) {
             resolve(true);
           } else {
             resolve(false);
           }
         })
-        .catch(e => {
+        .catch((e) => {
           if (e.code === "NoSuchKey") {
             resolve(false);
           } else {
@@ -158,7 +156,7 @@ class ALIOSS {
   /** 上传文件 */
   upload(objectName, localFile) {
     return this.client.put(objectName, localFile);
-    /* 
+    /*
     {
       name: '',
       url: '',
@@ -186,7 +184,7 @@ class QINIUOSS {
     // 初始化上传凭证
     const mac = new qiniu.auth.digest.Mac(options.accessKey, options.secretKey);
     const putPolicy = new qiniu.rs.PutPolicy({
-      scope: options.bucket
+      scope: options.bucket,
     });
     /** 上传凭证 */
     this.uploadToken = putPolicy.uploadToken(mac);
@@ -210,8 +208,8 @@ class QINIUOSS {
 
   /** 检查文件是否在云存储空间已经存在  */
   checkFileUpStatus(objectName) {
-    return new Promise(resolve => {
-      this.bucketManager.stat(this.bucket, objectName, function(err, respBody, respInfo) {
+    return new Promise((resolve) => {
+      this.bucketManager.stat(this.bucket, objectName, function (err, respBody, respInfo) {
         if (err) {
           throw err;
         }
@@ -230,7 +228,7 @@ class QINIUOSS {
   upload(objectName, localFile) {
     return new Promise((resolve, reject) => {
       // 文件上传
-      this.formUploader.putFile(this.uploadToken, objectName, localFile, this.putExtra, function(respErr) {
+      this.formUploader.putFile(this.uploadToken, objectName, localFile, this.putExtra, function (respErr) {
         if (respErr) {
           reject(respErr);
           return;

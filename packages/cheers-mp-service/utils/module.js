@@ -30,17 +30,17 @@ function resolveFallback(request, options) {
 
 const resolve = semver.satisfies(process.version, ">=10.0.0") ? require.resolve : resolveFallback;
 
-exports.resolveModule = function(request, context) {
+exports.resolveModule = function (request, context) {
   let resolvedPath;
   try {
     resolvedPath = resolve(request, {
-      paths: [context]
+      paths: [context],
     });
   } catch (e) {}
   return resolvedPath;
 };
 
-exports.loadModule = function(request, context, force = false) {
+exports.loadModule = function (request, context, force = false) {
   const resolvedPath = exports.resolveModule(request, context);
   if (resolvedPath) {
     if (force) {
@@ -50,7 +50,7 @@ exports.loadModule = function(request, context, force = false) {
   }
 };
 
-exports.clearModule = function(request, context) {
+exports.clearModule = function (request, context) {
   const resolvedPath = exports.resolveModule(request, context);
   if (resolvedPath) {
     clearRequireCache(resolvedPath);
@@ -62,7 +62,7 @@ function clearRequireCache(id, map = new Map()) {
   if (module) {
     map.set(id, true);
     // Clear children modules
-    module.children.forEach(child => {
+    module.children.forEach((child) => {
       if (!map.get(child.id)) clearRequireCache(child.id, map);
     });
     delete require.cache[id];

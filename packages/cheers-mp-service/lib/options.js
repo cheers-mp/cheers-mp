@@ -1,24 +1,18 @@
 const { createSchema, validate } = require("../utils/validate");
 
-const schema = createSchema(joi =>
+const schema = createSchema((joi) =>
   joi.object({
     /** 配置阿里云、七牛云存储 */
     oss: joi
       .object({
-        type: joi
-          .any()
-          .valid(["ALI", "QINIU"])
-          .required(),
-        options: joi.object().required()
+        type: joi.any().valid(["ALI", "QINIU"]).required(),
+        options: joi.object().required(),
       })
       .allow(""),
 
     compiler: joi
       .object({
-        type: joi
-          .string()
-          .valid(["hard", "soft"])
-          .required(),
+        type: joi.string().valid(["hard", "soft"]).required(),
         options: joi
           .alternatives()
           .try(
@@ -27,10 +21,7 @@ const schema = createSchema(joi =>
               /** 开发者工具安装目录 */
               devToolsDir: joi.string().required(),
               /** 开发者工具命令行使用的版本 */
-              version: joi
-                .string()
-                .valid(["v1", "v2"])
-                .required()
+              version: joi.string().valid(["v1", "v2"]).required(),
             }),
             /** 当compiler.type为soft时生效 */
             joi.object({
@@ -43,10 +34,10 @@ const schema = createSchema(joi =>
               /** 项目的类型，有效值 miniProgram/miniProgramPlugin/miniGame/miniGamePlugin， 默认miniProgram */
               type: joi.string().valid(["miniProgram", "miniProgramPlugin", "miniGame", "miniGamePlugin"]),
               /** 指定需要排除的规则 */
-              ignores: joi.array().items(joi.string().required())
+              ignores: joi.array().items(joi.string().required()),
             })
           )
-          .required()
+          .required(),
       })
       .required(),
 
@@ -67,15 +58,15 @@ const schema = createSchema(joi =>
       /** px单位转rpx单位 */
       px2rpx: joi.object({
         rpxUnit: joi.number().integer(),
-        rpxPrecision: joi.number().integer()
-      })
+        rpxPrecision: joi.number().integer(),
+      }),
     }),
 
     // 如果你不需要生产环境的js source map，可以将其设置为 false 以加速生产环境构建。
     productionSourceMap: joi.boolean(),
 
     // 第三方插件自定义选项
-    pluginOptions: joi.object()
+    pluginOptions: joi.object(),
   })
 );
 
@@ -87,9 +78,9 @@ exports.defaults = () => ({
   oss: "",
   compiler: {
     type: "",
-    options: {}
+    options: {},
   },
   css: {},
   lintOnSave: true,
-  productionSourceMap: true
+  productionSourceMap: true,
 });

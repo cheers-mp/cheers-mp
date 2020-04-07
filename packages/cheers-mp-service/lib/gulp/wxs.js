@@ -5,7 +5,7 @@ const resolveClientEnv = require("../../utils/resolveClientEnv");
 
 const defaultOpt = {
   srcDir: "src",
-  outputDir: "dist"
+  outputDir: "dist",
 };
 function wxs(opt) {
   opt = deepmerge(defaultOpt, opt);

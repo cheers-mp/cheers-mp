@@ -3,7 +3,7 @@
 const semver = require("semver");
 const requiredVersion = require("../package.json").engines.node;
 if (!semver.satisfies(process.version, requiredVersion)) {
-  error(
+  console.error(
     `你正在使用 Node 版本是 ${process.version}, 想用我你得 ` + `需要 Node ${requiredVersion}.\n快去升级 node 版本吧.`
   );
   process.exit(1);
@@ -39,14 +39,14 @@ if (!semver.satisfies(process.version, requiredVersion)) {
 
   const cli = require("cac")();
 
-  cli.command("create <projectName>", "创建一个新的小程序项目").action(async projectName => {
+  cli.command("create <projectName>", "创建一个新的小程序项目").action(async (projectName) => {
     logWithSpinner("从仓库下载小程序项目模板： https://github.com/bigmeow/cheers-mp-template.git ");
     const sao = require("sao");
     const app = sao({
       generator: "direct:https://github.com/bigmeow/cheers-mp-template.git",
       clone: true,
       update: true,
-      outDir: projectName
+      outDir: projectName,
     });
     stopSpinner();
     await app.run().catch(sao.handleError);

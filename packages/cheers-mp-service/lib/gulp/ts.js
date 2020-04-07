@@ -11,7 +11,7 @@ const lazypipe = require("lazypipe");
 const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
-  tsConfig: ""
+  tsConfig: "",
 };
 
 function ts(opt, userOptions) {
@@ -20,7 +20,7 @@ function ts(opt, userOptions) {
   const isProd = process.env.NODE_ENV === "production";
   const productionSourceMap = isProd && userOptions.productionSourceMap;
 
-  const jsCompressLazy = lazypipe().pipe(function() {
+  const jsCompressLazy = lazypipe().pipe(function () {
     return gulpIf(isProd, require("gulp-terser")());
   });
 

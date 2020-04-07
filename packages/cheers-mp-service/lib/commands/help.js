@@ -9,8 +9,8 @@ function getPadLength(obj) {
   return longest;
 }
 
-module.exports = (api, options) => {
-  api.registerCommand("help", args => {
+module.exports = (api) => {
+  api.registerCommand("help", (args) => {
     const commandName = args._[0];
     if (!commandName) {
       logMainHelp();
@@ -52,7 +52,7 @@ module.exports = (api, options) => {
         console.log(
           opts.details
             .split("\n")
-            .map(line => `  ${line}`)
+            .map((line) => `  ${line}`)
             .join("\n")
         );
       }

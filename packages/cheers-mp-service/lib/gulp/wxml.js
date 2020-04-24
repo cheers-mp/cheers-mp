@@ -20,6 +20,10 @@ function wxml(opt) {
         gulpIf(
           opt.isUseOSS,
           gulpCDN({
+            // wxml文件中的style属性中的图片不替换，因为目前这个替换库中使用的解析html标签的库存在bug,
+            // 同时存在自闭合标签时和style属性时会解析不正确
+            // TODO 若要支持可以考虑fock它并换掉它的解析库
+            css: false,
             html: {
               "image[src]": "src",
             },

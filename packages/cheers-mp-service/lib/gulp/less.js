@@ -11,7 +11,7 @@ const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
   isUseOSS: false,
-  rewriter: (url) => url,
+  rewriter: () => null,
 };
 
 function less(opt, userOptions) {

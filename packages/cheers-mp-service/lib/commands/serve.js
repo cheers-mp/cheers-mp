@@ -46,7 +46,7 @@ module.exports = (api, userOptions) => {
 
         isUseOSS: !!(userOptions.oss && userOptions.oss.options),
 
-        rewriter: (url) => url,
+        rewriter: () => null,
       };
 
       // 清空输出目录
@@ -63,16 +63,16 @@ module.exports = (api, userOptions) => {
         // 处理文件内匹配到的图片url
         baseOpt.rewriter = (url) => {
           if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_") > -1) {
-            return url;
+            return null;
           }
           if ([".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"].includes(path.extname(url).toLocaleLowerCase())) {
             try {
               return imageOperator.getProxyURI(url);
             } catch (error) {
-              return url;
+              return null;
             }
           }
-          return url;
+          return null;
         };
         imageOperator = require("cheers-mp-images")({
           target: baseOpt.srcDir,

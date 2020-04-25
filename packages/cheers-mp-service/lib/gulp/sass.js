@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 const gulpSass = require("gulp-sass");
 const gulpIf = require("gulp-if");
-const gulpCDN = require("gulp-cdnify");
+const gulpCDN = require("gulp-cdnify-plus");
 const gulpRename = require("gulp-rename");
 const gulpPostcss = require("gulp-postcss");
 const deepmerge = require("deepmerge");
@@ -13,7 +13,7 @@ const defaultOpt = {
   srcDir: "src",
   outputDir: "dist",
   isUseOSS: false,
-  rewriter: () => null,
+  rewriter: (url) => url,
 };
 
 function sass(opt, userOptions) {

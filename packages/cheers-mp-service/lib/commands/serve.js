@@ -63,16 +63,16 @@ module.exports = (api, userOptions) => {
         // 处理文件内匹配到的图片url
         baseOpt.rewriter = (url) => {
           if (/^(https?):\/\//.test(url) || url.indexOf("/LOCAL_") > -1) {
-            return null;
+            return url;
           }
           if ([".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"].includes(path.extname(url).toLocaleLowerCase())) {
             try {
               return imageOperator.getProxyURI(url);
             } catch (error) {
-              return null;
+              return url;
             }
           }
-          return null;
+          return url;
         };
         imageOperator = require("cheers-mp-images")({
           target: baseOpt.srcDir,

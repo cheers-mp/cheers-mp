@@ -1,4 +1,6 @@
 {
-  "packages": ["packages/cheers-mp-*"],
-  "version": "1.2.0-alpha.4"
+  "packages": [
+    "packages/cheers-mp-*"
+  ],
+  "version": "1.2.0-alpha.5"
 }

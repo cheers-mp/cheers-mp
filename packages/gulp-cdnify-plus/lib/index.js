@@ -7,6 +7,7 @@ const log = require("fancy-log");
 const PluginError = require("plugin-error");
 const rewriteCSSURLs = require("css-url-rewriter");
 const cheerio = require("cheerio");
+const htmlparser2 = require("htmlparser2");
 
 // Consts
 const PLUGIN_NAME = "gulp-cdnify-plus";
@@ -113,7 +114,12 @@ function gulpCdnifyPlus(options) {
         }
         try {
           const oldHTML = String(file.contents);
-          const $ = cheerio.load(oldHTML, { decodeEntities: false, xmlMode: true });
+          const dom = htmlparser2.parseDOM(oldHTML, {
+            decodeEntities: false,
+            xmlMode: true,
+            recognizeSelfClosing: true,
+          });
+          const $ = cheerio.load(dom, { decodeEntities: false });
 
           for (const search in options.html) {
             // eslint-disable-next-line no-prototype-builtins

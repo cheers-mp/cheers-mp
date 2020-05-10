@@ -1,6 +1,6 @@
 const gulp = require("gulp");
 const gulpIf = require("gulp-if");
-const gulpCDN = require("gulp-cdnify-plus");
+const gulpCDN = require("gulp-cdnify");
 const deepmerge = require("deepmerge");
 
 const defaultOpt = {

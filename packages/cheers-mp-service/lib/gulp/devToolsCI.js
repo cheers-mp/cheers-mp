@@ -49,6 +49,17 @@ const installAndBuilder = async (opt, userOptions, args) => {
   }
   open.displayName = "在本地开发者工具中打开项目";
 
+  async function refreshFileCache() {
+    try {
+      const res = await instance.resetFileutils(opt.context);
+      console.log(res.stderr);
+      console.log(res.stdout);
+    } catch (error) {
+      warn("缓存清除失败:" + JSON.stringify(error));
+    }
+  }
+  refreshFileCache.displayName = "重置工具内部文件缓存";
+
   async function upload() {
     const res = await instance.upload(opt.context, formatDate(new Date(), "yyyy.MM.ddhhmmss"), "自动构建上传测试");
     console.log(res.stderr);
@@ -63,6 +74,8 @@ const installAndBuilder = async (opt, userOptions, args) => {
   if (args.upload) {
     taskSync.push(upload);
   }
+
+  taskSync.push(refreshFileCache);
 
   return gulp.series(...taskSync);
 };

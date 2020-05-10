@@ -50,7 +50,7 @@ function sass(opt, userOptions) {
       .src(`${opt.srcDir}/**/*.{scss,sass}`, { since: gulp.lastRun(compileSASS) })
 
       .pipe(gulpSass(sassOption))
-      .pipe(gulpPostcss(postcssPlugins))
+      .pipe(gulpIf(postcssPlugins.length > 0, gulpPostcss(postcssPlugins)))
       .pipe(
         gulpIf(
           opt.isUseOSS,

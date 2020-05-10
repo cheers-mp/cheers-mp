@@ -42,7 +42,7 @@ function less(opt, userOptions) {
       .src(`${opt.srcDir}/**/*.less`, { since: gulp.lastRun(compileLESS) })
 
       .pipe(gulpLess(userOptions.css.less))
-      .pipe(gulpPostcss(postcssPlugins))
+      .pipe(gulpIf(postcssPlugins.length > 0, gulpPostcss(postcssPlugins)))
       .pipe(
         gulpIf(
           opt.isUseOSS,

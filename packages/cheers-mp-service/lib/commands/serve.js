@@ -74,7 +74,7 @@ module.exports = (api, userOptions) => {
           }
           return url;
         };
-        imageOperator = require("cheers-mp-images")({
+        imageOperator = await require("cheers-mp-images")({
           target: baseOpt.srcDir,
           proxy: {
             port: 8888,

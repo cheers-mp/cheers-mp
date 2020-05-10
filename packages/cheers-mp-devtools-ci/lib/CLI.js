@@ -102,6 +102,13 @@ class CLI {
    * @param {string} projectPath
    */
   resetFileutils(projectPath) {
+    if (this.version === "v1") {
+      console.warn("仅v2版本支持 reset-fileutils 命令，当前 v1 版本将不执行");
+      return Promise.resolve({
+        stdout: "",
+        stderr: "",
+      });
+    }
     const commandStr = ["reset-fileutils", IF(projectPath, `--project "${projectPath}"`)].join("");
     return this._exec(commandStr);
   }

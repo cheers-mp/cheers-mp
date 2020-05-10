@@ -1,6 +1,7 @@
 const { createServer } = require("./server");
 const { UploadClient } = require("./client");
 const { getIPAddress, normalize, getHash } = require("./utils");
+
 /*
 interface Config {
   target: string
@@ -30,8 +31,20 @@ interface Config {
 }
 */
 
-const ImageOperator = (config) => {
+const ImageOperator = async (config) => {
+  const portfinder = require("portfinder");
+  const proxy = {
+    port: 8080,
+    ...config.proxy,
+  };
+  const port = proxy.port;
   const ip = getIPAddress();
+  portfinder.basePort = port;
+  const newPort = await portfinder.getPortPromise();
+  if (newPort !== port) {
+    proxy.port = newPort;
+  }
+  config.proxy = proxy;
   return {
     upload: () => {
       return UploadClient(config.oss, config.target);

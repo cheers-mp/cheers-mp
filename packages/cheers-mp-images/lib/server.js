@@ -17,8 +17,7 @@
 //   }
 // };
 
-exports.createServer = function createServer({ target, ip, port }) {
-  const portfinder = require("portfinder");
+exports.createServer = async function createServer({ target, ip, port }) {
   const express = require("express");
   // const path = require("path");
   const chalk = require("chalk");
@@ -26,18 +25,7 @@ exports.createServer = function createServer({ target, ip, port }) {
   // const route = path.basename(target);
   app.use(`/`, express.static(target));
 
-  return new Promise((resolve, reject) => {
-    portfinder.basePort = port; // default: 8000
-    portfinder.highestPort = port;
-    portfinder
-      .getPortPromise()
-      .then((port) => {
-        app.listen(port, "0.0.0.0");
-        console.log(chalk.green.bold(`图片代理服务运行中...  => http://${ip}:${port}`));
-        resolve(`http://${ip}:${port}`);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  app.listen(port, "0.0.0.0");
+  console.log(chalk.green.bold(`图片代理服务运行中...  => http://${ip}:${port}`));
+  return `http://${ip}:${port}`;
 };

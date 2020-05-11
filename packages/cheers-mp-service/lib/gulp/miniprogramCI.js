@@ -27,7 +27,7 @@ const installAndBuilder = (opt, userOptions, args) => {
     ciOpt.appid = projectConfigJson.appid;
   }
   if (!ciOpt.projectPath) {
-    ciOpt.projectPath = opt.outputDir;
+    ciOpt.projectPath = opt.context;
   }
   const project = new ci.Project(ciOpt);
 
@@ -43,11 +43,11 @@ const installAndBuilder = (opt, userOptions, args) => {
   installDependencies.displayName = "输出目录下安装依赖";
 
   async function buildNPM() {
-    const warning = await ci.packNpm(project, {
-      reporter: (infos) => {
-        console.log(infos);
-      },
+    const warning = await ci.packNpmManually({
+      packageJsonPath: opt.outputDir,
+      miniprogramNpmDistDir: opt.outputDir,
     });
+    console.log("\n构建结果：", warning);
     return Promise.resolve(warning);
   }
   buildNPM.displayName = "调用CI包的“构建NPM”服务";

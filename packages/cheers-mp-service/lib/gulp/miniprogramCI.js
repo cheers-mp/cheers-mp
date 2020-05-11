@@ -43,11 +43,16 @@ const installAndBuilder = (opt, userOptions, args) => {
   installDependencies.displayName = "输出目录下安装依赖";
 
   async function buildNPM() {
-    const warning = await ci.packNpmManually({
+    /*  const warning = await ci.packNpmManually({
       packageJsonPath: opt.outputDir,
       miniprogramNpmDistDir: opt.outputDir,
     });
-    console.log("\n构建结果：", warning);
+    console.log("\n构建结果：", warning); */
+    const warning = await ci.packNpm(project, {
+      reporter: (infos) => {
+        console.log(infos);
+      },
+    });
     return Promise.resolve(warning);
   }
   buildNPM.displayName = "调用CI包的“构建NPM”服务";

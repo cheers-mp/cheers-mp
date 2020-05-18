@@ -26,6 +26,7 @@ function wxml(opt) {
             css: false,
             html: {
               "image[src]": "src",
+              "cover-image[src]": "src",
             },
             rewriter: opt.rewriter,
           })

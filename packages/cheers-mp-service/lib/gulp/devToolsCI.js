@@ -32,9 +32,13 @@ const installAndBuilder = async (opt, userOptions, args) => {
   installDependencies.displayName = "输出目录下安装依赖";
 
   async function buildNPM() {
-    const res = await instance.buildNPM(opt.context);
-    console.log(res.stderr);
-    console.log(res.stdout);
+    try {
+      const res = await instance.buildNPM(opt.context);
+      console.log(res.stderr);
+      console.log(res.stdout);
+    } catch (error) {
+      warn("CI构建NPM失败，请手动点击开发者工具的“构建NPM”按钮。失败原因：" + JSON.stringify(error));
+    }
   }
   buildNPM.displayName = "调用本地开发者工具的“构建NPM”服务";
 
@@ -55,7 +59,7 @@ const installAndBuilder = async (opt, userOptions, args) => {
       console.log(res.stderr);
       console.log(res.stdout);
     } catch (error) {
-      warn("缓存清除失败:" + JSON.stringify(error));
+      warn("CI缓存清除失败,您可手动点击开发者工具的“清除文件缓存”按钮。失败原因：" + JSON.stringify(error));
     }
   }
   refreshFileCache.displayName = "重置工具内部文件缓存";

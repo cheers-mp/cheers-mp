@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 "use strict";
 
 const url = require("url");
@@ -6,8 +7,7 @@ const through = require("through2");
 const log = require("fancy-log");
 const PluginError = require("plugin-error");
 const rewriteCSSURLs = require("css-url-rewriter");
-const cheerio = require("cheerio");
-const htmlparser2 = require("htmlparser2");
+const wxml = require("@vivaxy/wxml");
 
 // Consts
 const PLUGIN_NAME = "gulp-cdnify-plus";
@@ -24,20 +24,14 @@ function isLocalPath(filePath) {
 
 // Default options
 const defaults = {
-  html: true,
+  wxml: true,
   css: true,
 };
 
-const htmlDefaults = {
-  "img[data-src]": "data-src",
-  "img[src]": "src",
-  'link[rel="apple-touch-icon"]': "href",
-  'link[rel="icon"]': "href",
-  'link[rel="shortcut icon"]': "href",
-  'link[rel="stylesheet"]': "href",
-  "script[src]": "src",
-  "source[src]": "src",
-  "video[poster]": "poster",
+const wxmlDefaults = {
+  image: "src",
+  video: "poster",
+  "cover-image": "src",
 };
 
 function extend(target, source) {
@@ -61,17 +55,17 @@ function gulpCdnifyPlus(options) {
 
   options = extend(options, defaults);
 
-  // Handle HTML selector:attribute settings
-  if (options.html === false) {
-    options.html = {};
-  } else if (options.html === true) {
-    options.html = htmlDefaults;
-  } else if (typeof options.html === "object") {
-    for (const key in htmlDefaults) {
+  // Handle wxml selector:attribute settings
+  if (options.wxml === false) {
+    options.wxml = {};
+  } else if (options.wxml === true) {
+    options.wxml = wxmlDefaults;
+  } else if (typeof options.wxml === "object") {
+    for (const key in wxmlDefaults) {
       // eslint-disable-next-line no-prototype-builtins
-      if (htmlDefaults.hasOwnProperty(key)) {
-        if (typeof options.html[key] === "undefined") {
-          options.html[key] = htmlDefaults[key];
+      if (wxmlDefaults.hasOwnProperty(key)) {
+        if (typeof options.wxml[key] === "undefined") {
+          options.wxml[key] = wxmlDefaults[key];
         }
       }
     }
@@ -113,40 +107,34 @@ function gulpCdnifyPlus(options) {
           log.warn('暂不支持js文件: "' + srcFile + '"');
         }
         try {
-          const oldHTML = String(file.contents);
-          const dom = htmlparser2.parseDOM(oldHTML, {
-            decodeEntities: false,
-            xmlMode: true,
-            recognizeSelfClosing: true,
-          });
-          const $ = cheerio.load(dom, { decodeEntities: false });
+          const parsed = wxml.parse(String(file.contents));
+          wxml.traverse(parsed, function visitor(node) {
+            if (node.type !== 1) return;
+            for (const search in options.wxml) {
+              if (options.wxml.hasOwnProperty(search)) {
+                const attr = options.wxml[search];
 
-          for (const search in options.html) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (options.html.hasOwnProperty(search)) {
-              const attr = options.html[search];
-              if (attr) {
-                $(search).attr(attr, function (index, oldValue) {
-                  const replaceAfter = rewriteURL(oldValue);
-                  return replaceAfter == null || replaceAfter === oldValue ? oldValue : replaceAfter;
-                });
+                if (attr) {
+                  if (node.tagName === search && node.attributes.hasOwnProperty(attr)) {
+                    const newValue = rewriteURL(node.attributes[attr]);
+                    if (newValue != null && newValue !== node.attributes[attr]) {
+                      node.attributes[attr] = newValue;
+                    }
+                  }
+                }
               }
             }
-          }
+            const oldCSS = node.attributes.style;
+            if (options.css && oldCSS) {
+              // 内联样式支持
+              const newCSS = rewriteCSSURLs(oldCSS, rewriteURL);
+              newCSS !== oldCSS && (node.attributes.style = newCSS);
+            }
+          });
 
-          // Update the URLs in any embedded stylesheets
-          if (options.css) {
-            // 内联样式支持
-            $("[style]").attr("style", function (index, oldValue) {
-              return rewriteCSSURLs(oldValue, rewriteURL);
-            });
-            // soup.setInnerHTML('style', function (css) {
-            //   return rewriteCSSURLs(css, rewriteURL);
-            // });
-          }
+          const serialized = wxml.serialize(parsed);
+          file.contents = new Buffer(serialized);
 
-          // Write it to disk
-          file.contents = new Buffer($.html());
           log.info('Changed non-css file: "' + srcFile + '"');
         } catch (e) {
           console.log(e);

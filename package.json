@@ -2,8 +2,9 @@
   "name": "root",
   "private": true,
   "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.5.0",
     "lerna": "^3.20.2",
-    "vuepress": "^1.4.0"
+    "vuepress": "^1.5.0"
   },
   "prettier": {
     "printWidth": 120

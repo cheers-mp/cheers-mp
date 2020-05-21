@@ -4,7 +4,7 @@ heroImage: ./logo2.png
 heroText: Cheers-mp🍻
 tagline: Almost 零配置小程序脚手架 (゜-゜)つロ 干杯~
 actionText: 打架体验中 →
-actionLink: /guide/
+actionLink: /introduce
 features:
   - title: 功能丰富
     details: 对Typescript、Less、Sass、Eslint提供开箱即用的支持。

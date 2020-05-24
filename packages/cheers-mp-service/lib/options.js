@@ -83,4 +83,5 @@ exports.defaults = () => ({
   css: {},
   lintOnSave: true,
   productionSourceMap: true,
+  pluginOptions: {},
 });

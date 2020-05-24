@@ -1,0 +1,35 @@
+{
+  "name": "cheers-mp-plugin-router",
+  "version": "1.2.2",
+  "description": "读取 cheers-mp-router 路由库的路由配置，自动生成对应的小程序页面path数组并设置到app.json中",
+  "keywords": [
+    "cheers-mp-plugin"
+  ],
+  "author": "bigMeow <running@vip.163.com>",
+  "homepage": "https://github.com/bigmeow/cheers-mp#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bigmeow/cheers-mp.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/bigmeow/cheers-mp/issues"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6"
+  },
+  "dependencies": {
+    "gulp": "^4.0.2"
+  }
+}

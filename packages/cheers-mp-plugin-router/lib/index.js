@@ -58,7 +58,7 @@ module.exports = (api, userOptions) => {
       const isIndependentSubpkg = pagePath.startsWith(ISubPkgNamePrefix);
       if (isSubPkg || isIndependentSubpkg) {
         const packageName = pagePath.substr(0, pagePath.indexOf("/"));
-        console.log("子包名字：", packageName);
+        // console.log("子包名字：", packageName);
         pagePath = pagePath.replace(packageName + "/", "");
         if (subPkgMap.get(packageName)) {
           subPkgMap.get(packageName).pages.push(pagePath);
@@ -82,7 +82,7 @@ module.exports = (api, userOptions) => {
 
     appJSON.pages = mainPackage;
     appJSON.subpackages = [...subPkgMap.values()];
-    console.log(appJSON);
+    // console.log(appJSON);
     await writeJsonFile(appJSONPath, appJSON, { detectIndent: true });
     // console.log("编译编译完成");
   }

@@ -16,6 +16,8 @@ npx cheers-mp create 项目名字
 
 模板仓库[传送门](https://github.com/bigmeow/cheers-mp-template)
 
+> 自动创建项目功能未完善暂不可用，可先 clone [typescript 仓库 demo](https://github.com/bigmeow/cheers-mp-typescript-demo) 体验
+
 ## 已有的原生小程序使用
 
 1. 将源码放入 `src` 目录下，但是小程序的项目配置文件 `project.config.json` 要放在项目根目录下;

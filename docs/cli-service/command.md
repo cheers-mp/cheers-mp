@@ -45,7 +45,8 @@ npx cheers-mp-service serve --open
 选项：
 
   --mode    指定环境模式 (默认值：development)
-  --open    编译后自动在开发者工具中打开项目(仅compiler.type为hard时生效)
+  --open    编译后自动在开发者工具中打开项目(仅 compiler.type 为 hard 时生效)
+  --no-cache  不对输出目录做“安装依赖”、“构建NPM”操作的缓存，每次都启动编译都“安装依赖”，重新“构建NPM”(v1.4.0版本开始支持)
 ```
 
 `cheers-mp-service serve` 命令会打开监听模式， 监听项目中被修改的文件然后重新编译该文件；如果你启用了 `oss` 配置，则会额外启动一个图片服务器，用于代理项目中用到的图片资源。
@@ -57,10 +58,11 @@ npx cheers-mp-service serve --open
 
 选项：
 
-  --mode    指定 env 文件模式 (默认: production)
-  --clean   是否每次编译前先清空处理掉输出目录(默认: true)
-  --watch   开启监听模式,默认关闭
-  --upload  编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭
+  --mode      指定 env 文件模式 (默认: production)
+  --no-clean     是否每次编译前先清空处理掉输出目录,默认 true (v1.4.0版本后废弃)
+  --no-cache  不对输出目录做“安装依赖”、“构建NPM”操作的缓存，每次都启动编译都“安装依赖”，重新“构建NPM”(v1.4.0版本开始支持)
+  --watch     开启监听模式,默认关闭
+  --upload    编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭
 ```
 
 `cheers-mp-service build` 会在 `dist/` 目录产生一个可用于生产环境的包，带有 JS/CSS/WXML 的压缩和 `sourceMap`。

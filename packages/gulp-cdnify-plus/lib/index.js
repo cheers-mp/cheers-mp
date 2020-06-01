@@ -101,7 +101,7 @@ function gulpCdnifyPlus(options) {
         const newCSS = options.css ? rewriteCSSURLs(oldCSS, rewriteURL) : oldCSS;
 
         file.contents = new Buffer(newCSS);
-        log.info('Changed CSS file: "' + srcFile + '"');
+        // log.info('Changed CSS file: "' + srcFile + '"');
       } else {
         if (/\.js$/.test(srcFile)) {
           log.warn('暂不支持js文件: "' + srcFile + '"');
@@ -135,7 +135,7 @@ function gulpCdnifyPlus(options) {
           const serialized = wxml.serialize(parsed);
           file.contents = new Buffer(serialized);
 
-          log.info('Changed non-css file: "' + srcFile + '"');
+          // log.info('Changed non-css file: "' + srcFile + '"');
         } catch (e) {
           console.log(e);
           log.warn('File not changed: "' + srcFile + '"');

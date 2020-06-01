@@ -40,7 +40,7 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
         await writeCacheIdentifier();
       }
     } catch (error) {
-      warn("CI构建NPM失败，请手动点击开发者工具的“构建NPM”按钮。\n失败原因：" + JSON.stringify(error));
+      warn("CI构建NPM失败，请手动点击开发者工具的“构建NPM”按钮。\n失败原因：" + error.stdout + error.stderr);
     }
   }
   buildNPM.displayName = "调用本地开发者工具的“构建NPM”服务";
@@ -51,7 +51,7 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
       console.log(res.stderr);
       console.log(res.stdout);
     } catch (error) {
-      warn("打开失败，请手动进行操作。\n失败原因：" + JSON.stringify(error));
+      warn("打开失败，请手动进行操作。\n失败原因：" + error.stdout + error.stderr);
     }
   }
   open.displayName = "在本地开发者工具中打开项目";
@@ -62,7 +62,7 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
       console.log(res.stderr);
       console.log(res.stdout);
     } catch (error) {
-      warn("CI缓存清除失败,您可手动点击开发者工具的“清除文件缓存”按钮。\n失败原因：" + JSON.stringify(error));
+      warn("CI缓存清除失败,您可手动点击开发者工具的“清除文件缓存”按钮。\n失败原因：" + error.stdout + error.stderr);
     }
   }
   refreshFileCache.displayName = "重置工具内部文件缓存";

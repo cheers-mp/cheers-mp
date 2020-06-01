@@ -26,10 +26,10 @@
   "bugs": {
     "url": "https://github.com/bigmeow/cheers-mp/issues"
   },
-  "devDependencies": {
-    "@babel/core": "^7.9.6"
-  },
   "dependencies": {
-    "gulp": "^4.0.2"
+    "fs-extra": "^9.0.0",
+    "gulp": "^4.0.2",
+    "write-json-file": "^4.3.0",
+    "@babel/core": "^7.9.6"
   }
 }

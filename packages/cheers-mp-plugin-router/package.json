@@ -1,6 +1,6 @@
 {
   "name": "cheers-mp-plugin-router",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "读取 cheers-mp-router 路由库的路由配置，自动生成对应的小程序页面path数组并设置到app.json中",
   "keywords": [
     "cheers-mp-plugin"
@@ -27,9 +27,9 @@
     "url": "https://github.com/bigmeow/cheers-mp/issues"
   },
   "dependencies": {
+    "@babel/core": "^7.9.6",
     "fs-extra": "^9.0.0",
     "gulp": "^4.0.2",
-    "write-json-file": "^4.3.0",
-    "@babel/core": "^7.9.6"
+    "write-json-file": "^4.3.0"
   }
 }

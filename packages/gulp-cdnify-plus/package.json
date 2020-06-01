@@ -1,6 +1,6 @@
 {
   "name": "gulp-cdnify-plus",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "将css和wxml文件中的本地URL转换为CDN的URL",
   "keywords": [
     "gulp",

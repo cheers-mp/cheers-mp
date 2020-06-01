@@ -7,7 +7,7 @@
     <meta name="generator" content="VuePress 1.5.0">
     
     <meta name="description" content="Almost 零配置小程序脚手架(゜-゜)つロ 干杯~">
-    <link rel="preload" href="/cheers-mp/assets/css/0.styles.95f2328e.css" as="style"><link rel="preload" href="/cheers-mp/assets/js/app.f6b073f5.js" as="script"><link rel="preload" href="/cheers-mp/assets/js/2.8275b49c.js" as="script"><link rel="preload" href="/cheers-mp/assets/js/6.faf4bfdd.js" as="script"><link rel="prefetch" href="/cheers-mp/assets/js/10.d0c21293.js"><link rel="prefetch" href="/cheers-mp/assets/js/11.b69bae79.js"><link rel="prefetch" href="/cheers-mp/assets/js/12.5d16c7d8.js"><link rel="prefetch" href="/cheers-mp/assets/js/3.7c43aa63.js"><link rel="prefetch" href="/cheers-mp/assets/js/4.0ea5a392.js"><link rel="prefetch" href="/cheers-mp/assets/js/5.032ced34.js"><link rel="prefetch" href="/cheers-mp/assets/js/7.a38c3c40.js"><link rel="prefetch" href="/cheers-mp/assets/js/8.97e9df38.js"><link rel="prefetch" href="/cheers-mp/assets/js/9.5e000fed.js">
+    <link rel="preload" href="/cheers-mp/assets/css/0.styles.95f2328e.css" as="style"><link rel="preload" href="/cheers-mp/assets/js/app.442e3949.js" as="script"><link rel="preload" href="/cheers-mp/assets/js/2.8275b49c.js" as="script"><link rel="preload" href="/cheers-mp/assets/js/6.80973f90.js" as="script"><link rel="prefetch" href="/cheers-mp/assets/js/10.d0c21293.js"><link rel="prefetch" href="/cheers-mp/assets/js/11.b69bae79.js"><link rel="prefetch" href="/cheers-mp/assets/js/12.5d16c7d8.js"><link rel="prefetch" href="/cheers-mp/assets/js/3.7c43aa63.js"><link rel="prefetch" href="/cheers-mp/assets/js/4.0ea5a392.js"><link rel="prefetch" href="/cheers-mp/assets/js/5.032ced34.js"><link rel="prefetch" href="/cheers-mp/assets/js/7.a38c3c40.js"><link rel="prefetch" href="/cheers-mp/assets/js/8.97e9df38.js"><link rel="prefetch" href="/cheers-mp/assets/js/9.5e000fed.js">
     <link rel="stylesheet" href="/cheers-mp/assets/css/0.styles.95f2328e.css">
   </head>
   <body>
@@ -31,15 +31,17 @@
 选项：
 
   --mode    指定环境模式 (默认值：development)
-  --open    编译后自动在开发者工具中打开项目(仅compiler.type为hard时生效)
+  --open    编译后自动在开发者工具中打开项目(仅 compiler.type 为 hard 时生效)
+  --no-cache  不对输出目录做“安装依赖”、“构建NPM”操作的缓存，每次都启动编译都“安装依赖”，重新“构建NPM”(v1.4.0版本开始支持)
 </code></pre></div><p><code>cheers-mp-service serve</code> 命令会打开监听模式， 监听项目中被修改的文件然后重新编译该文件；如果你启用了 <code>oss</code> 配置，则会额外启动一个图片服务器，用于代理项目中用到的图片资源。</p> <h2 id="cheers-mp-service-build"><a href="#cheers-mp-service-build" class="header-anchor">#</a> cheers-mp-service build</h2> <div class="language- extra-class"><pre class="language-text"><code>用法：cheers-mp-service build [选项] [选项值]
 
 选项：
 
-  --mode    指定 env 文件模式 (默认: production)
-  --clean   是否每次编译前先清空处理掉输出目录(默认: true)
-  --watch   开启监听模式,默认关闭
-  --upload  编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭
+  --mode      指定 env 文件模式 (默认: production)
+  --no-clean     是否每次编译前先清空处理掉输出目录,默认 true (v1.4.0版本后废弃)
+  --no-cache  不对输出目录做“安装依赖”、“构建NPM”操作的缓存，每次都启动编译都“安装依赖”，重新“构建NPM”(v1.4.0版本开始支持)
+  --watch     开启监听模式,默认关闭
+  --upload    编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭
 </code></pre></div><p><code>cheers-mp-service build</code> 会在 <code>dist/</code> 目录产生一个可用于生产环境的包，带有 JS/CSS/WXML 的压缩和 <code>sourceMap</code>。</p> <div class="custom-block danger"><p class="custom-block-title">注意</p> <p>无论是 <code>serve</code> 还是 <code>build</code> 命令， 都不会将你的 js 编译成 es5， 也不会将你的 css 编译成兼容更低版本的样式。
 所以，你的开发者工具要勾选上 <code>es6转es5</code>、<code>增强编译</code>、<code>上传时补全样式</code></p></div> <h2 id="查看所有的可用命令"><a href="#查看所有的可用命令" class="header-anchor">#</a> 查看所有的可用命令</h2> <p>你可以运行以下命令查看所有注入的命令：</p> <div class="language-bash extra-class"><pre class="language-bash"><code>npx vue-cli-service <span class="token builtin class-name">help</span>
 </code></pre></div><p>你也可以这样学习每个命令可用的选项：</p> <div class="language-bash extra-class"><pre class="language-bash"><code>npx vue-cli-service <span class="token builtin class-name">help</span> <span class="token punctuation">[</span>command<span class="token punctuation">]</span>
@@ -52,7 +54,7 @@
     --no-clean  在构建项目之前不清除输出<span class="token punctuation">(</span>dist<span class="token punctuation">)</span>目录
     --watch     开启监听模式,默认关闭
     --upload    编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭
-</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/bigmeow/cheers-mp/edit/master/cli-service/command.md" target="_blank" rel="noopener noreferrer">帮助我们改善此页面！</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">6/1/2020, 3:31:24 AM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/bigmeow/cheers-mp/edit/master/cli-service/command.md" target="_blank" rel="noopener noreferrer">帮助我们改善此页面！</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">6/1/2020, 5:10:35 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
       ←
       <a href="/cheers-mp/start.html" class="prev">
         开始
@@ -61,6 +63,6 @@
       </a>
       →
     </span></p></div> </main></div><div class="global-ui"><!----></div></div>
-    <script src="/cheers-mp/assets/js/app.f6b073f5.js" defer></script><script src="/cheers-mp/assets/js/2.8275b49c.js" defer></script><script src="/cheers-mp/assets/js/6.faf4bfdd.js" defer></script>
+    <script src="/cheers-mp/assets/js/app.442e3949.js" defer></script><script src="/cheers-mp/assets/js/2.8275b49c.js" defer></script><script src="/cheers-mp/assets/js/6.80973f90.js" defer></script>
   </body>
 </html>

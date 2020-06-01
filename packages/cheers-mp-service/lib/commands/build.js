@@ -17,7 +17,7 @@ module.exports = (api, userOptions) => {
       usage: "cheers-mp-cli-service build [options] [entry]",
       options: {
         "--mode": `指定 env 文件模式 (默认: production)`,
-        "--clean": "是否每次编译前先清空处理掉输出目录(默认: true)",
+        "--no-clean": "在构建项目之前不清除输出(dist)目录",
         "--watch": "开启监听模式,默认关闭",
         "--upload": "编译结束后是否自动调用开发者工具上传，上传的小程序可在后台设置为体验版，默认关闭",
       },

@@ -4,9 +4,9 @@ const gulp = require("gulp");
 const { log, info } = require("../../utils/logger");
 
 const defaults = {
-  clean: true,
   upload: false,
   open: false,
+  cache: true,
 };
 
 module.exports = (api, userOptions) => {
@@ -18,6 +18,7 @@ module.exports = (api, userOptions) => {
       options: {
         "--mode": `指定 env 文件模式 (默认: development)`,
         "--open": `编译后自动在开发者工具中打开项目(仅compiler.type为hard时生效)`,
+        "--no-cache": "不对输出目录做“安装依赖”、“构建NPM”操作的缓存，每次都启动编译都“安装依赖”，重新“构建NPM”",
       },
     },
     async function serve(args) {
@@ -49,8 +50,25 @@ module.exports = (api, userOptions) => {
         rewriter: () => null,
       };
 
+      // 判断是否启用缓存
+      const srcPackageJson = api.getPkg();
+      const { cacheDirectory, cacheIdentifier } = api.genCacheConfig("build-npm", srcPackageJson.dependencies || {});
+      const result = await Promise.all([
+        fs.pathExists(path.join(cacheDirectory, cacheIdentifier)),
+        fs.pathExists(path.join(baseOpt.outputDir, "miniprogram_npm")),
+        fs.pathExists(path.join(baseOpt.outputDir, "node_modules")),
+      ]);
+      const useCache = !result.includes(false) && args.cache;
+      /**
+       * 创建缓存文件标志
+       */
+      const writeCacheIdentifier = async () => {
+        await fs.emptyDir(cacheDirectory);
+        await fs.createFile(path.join(cacheDirectory, cacheIdentifier));
+      };
+
       // 清空输出目录
-      taskArr.push(require("../gulp/clean")(baseOpt.outputDir));
+      taskArr.push(require("../gulp/clean")(baseOpt.outputDir, useCache));
 
       // 切换appid
       if (process.env.APPID) {
@@ -109,10 +127,22 @@ module.exports = (api, userOptions) => {
 
       // 构建npm、上传代码
       if (userOptions.compiler.type === "hard") {
-        const installAndBuilderTask = await require("../gulp/devToolsCI")(baseOpt, userOptions, args);
+        const installAndBuilderTask = await require("../gulp/devToolsCI")(
+          baseOpt,
+          userOptions,
+          args,
+          useCache,
+          writeCacheIdentifier
+        );
         taskArr.push(installAndBuilderTask);
       } else {
-        const installAndBuilderTask = require("../gulp/miniprogramCI")(baseOpt, userOptions, args);
+        const installAndBuilderTask = require("../gulp/miniprogramCI")(
+          baseOpt,
+          userOptions,
+          args,
+          useCache,
+          writeCacheIdentifier
+        );
         taskArr.push(installAndBuilderTask);
       }
 

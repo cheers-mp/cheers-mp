@@ -8,7 +8,7 @@ const formatDate = require("../../utils/date");
 /**
  * 在输出目录下安装依赖包并构建npm
  */
-const installAndBuilder = (opt, userOptions, args) => {
+const installAndBuilder = (opt, userOptions, args, useCache, writeCacheIdentifier) => {
   /** 输出目录下的package.json 路径 */
   const distPackageJsonPath = path.join(opt.outputDir, "package.json");
 
@@ -53,6 +53,9 @@ const installAndBuilder = (opt, userOptions, args) => {
         console.log(infos);
       },
     });
+    if (useCache && typeof writeCacheIdentifier === "function") {
+      await writeCacheIdentifier();
+    }
     return Promise.resolve(warning);
   }
   buildNPM.displayName = "调用CI包的“构建NPM”服务";
@@ -67,12 +70,15 @@ const installAndBuilder = (opt, userOptions, args) => {
   }
   upload.displayName = "调用CI包的“上传代码”服务";
 
-  const taskSync = [createPackageJSON, installDependencies, buildNPM];
+  const taskSync = [];
+  if (!useCache) {
+    taskSync.push(createPackageJSON, installDependencies, buildNPM);
+  }
   if (args.upload) {
     taskSync.push(upload);
   }
 
-  return gulp.series(...taskSync);
+  return taskSync.length ? gulp.series(...taskSync) : [];
 };
 
 /**

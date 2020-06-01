@@ -20,6 +20,13 @@ module.exports = class PluginAPI {
   }
 
   /**
+   * 获取项目 package.json 文件内容
+   */
+  getPkg() {
+    return this.service.pkg;
+  }
+
+  /**
    * 根据相对路径获取绝对路径地址
    *
    * @param {string} _path - 相对于项目根目录的相对路径
@@ -84,18 +91,9 @@ module.exports = class PluginAPI {
     const fs = require("fs");
     const cacheDirectory = this.resolve(`node_modules/.cache/${id}`);
 
-    // replace \r\n to \n generate consistent hash
-    // const fmtFunc = (conf) => {
-    //   if (typeof conf === "function") {
-    //     return conf.toString().replace(/\r\n?/g, "\n");
-    //   }
-    //   return conf;
-    // };
-
     const variables = {
       partialIdentifier,
       service: require("../package.json").version,
-      "cache-loader": require("cache-loader/package.json").version,
       env: process.env.NODE_ENV,
     };
 

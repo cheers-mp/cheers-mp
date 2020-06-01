@@ -53,7 +53,7 @@ const installAndBuilder = (opt, userOptions, args, useCache, writeCacheIdentifie
         console.log(infos);
       },
     });
-    if (useCache && typeof writeCacheIdentifier === "function") {
+    if (args.cache && typeof writeCacheIdentifier === "function") {
       await writeCacheIdentifier();
     }
     return Promise.resolve(warning);

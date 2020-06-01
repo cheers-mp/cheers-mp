@@ -58,7 +58,7 @@ module.exports = (api, userOptions) => {
         fs.pathExists(path.join(baseOpt.outputDir, "miniprogram_npm")),
         fs.pathExists(path.join(baseOpt.outputDir, "node_modules")),
       ]);
-      const useCache = !result.includes(false) && args.cache;
+      const useCache = args.cache && !result.includes(false);
       /**
        * 创建缓存文件标志
        */

@@ -36,7 +36,7 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
       const res = await instance.buildNPM(opt.context);
       console.log(res.stderr);
       console.log(res.stdout);
-      if (useCache && typeof writeCacheIdentifier === "function") {
+      if (args.cache && typeof writeCacheIdentifier === "function") {
         await writeCacheIdentifier();
       }
     } catch (error) {

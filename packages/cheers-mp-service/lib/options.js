@@ -57,7 +57,7 @@ const schema = createSchema((joi) =>
 
       /** px单位转rpx单位 */
       px2rpx: joi.object({
-        rpxUnit: joi.number().integer(),
+        rpxUnit: joi.number(),
         rpxPrecision: joi.number().integer(),
       }),
     }),

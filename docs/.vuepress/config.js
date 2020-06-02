@@ -1,7 +1,7 @@
 module.exports = {
   title: "Cheers-mp",
   description: "Almost 零配置小程序脚手架(゜-゜)つロ 干杯~",
-  base: "/cheers-mp/",
+  base: "/",
   themeConfig: {
     repo: "bigmeow/cheers-mp",
     editLinks: true,

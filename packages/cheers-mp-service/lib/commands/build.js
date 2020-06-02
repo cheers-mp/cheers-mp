@@ -108,10 +108,10 @@ module.exports = (api, userOptions) => {
 
       // 其他并行编译任务
       const compilerTask = [
-        { name: "less", ext: ".less", enabled: true },
-        { name: "sass", ext: ".{scss,sass}", enabled: true },
+        { name: "less", ext: ".less", outputExt: ".wxss", enabled: true },
+        { name: "sass", ext: ".{scss,sass}", outputExt: ".wxss", enabled: true },
         { name: "wxss", ext: ".wxss", enabled: true },
-        { name: "ts", ext: ".ts", enabled: fs.existsSync(baseOpt.tsConfig) },
+        { name: "ts", ext: ".ts", outputExt: ".js", enabled: fs.existsSync(baseOpt.tsConfig) },
         { name: "js", ext: ".js", enabled: true },
         { name: "wxml", ext: ".wxml", enabled: true },
         { name: "json", ext: ".json", enabled: true },
@@ -119,10 +119,17 @@ module.exports = (api, userOptions) => {
         { name: "image", ext: ".{jpg,jpeg,png,gif,bmp,webp}", enabled: true },
       ]
         .filter((item) => item.enabled)
-        .map(({ name, ext }) => {
+        .map(({ name, ext, outputExt }) => {
           const task = require("../gulp/" + name)(baseOpt, userOptions);
+          function remove(file) {
+            let willDeleteFile = file.replace("src", "dist");
+            if (outputExt) {
+              willDeleteFile = willDeleteFile.replace(/\.\w*$/, outputExt);
+            }
+            fs.remove(willDeleteFile);
+          }
           // 监听模式
-          args.watch && gulp.watch(`src/**/*${ext}`, task);
+          gulp.watch(`src/**/*${ext}`).on("change", task).on("add", task).on("unlink", remove).on("unlinkDir", remove);
           return task;
         });
       taskArr.push(gulp.parallel(...compilerTask));

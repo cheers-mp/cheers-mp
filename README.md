@@ -1,8 +1,10 @@
 # cheers-mp
 
-Almost 零配置小程序工程化脚手架,文档建设完善中...
+Almost 零配置微信原生小程序脚手架，`vue-cli` 般的开发体验 ~
 
-> ps: 正在用它开发项目，边踩坑边修复 Bug,故写文档的速度可能很慢...
+## 文档
+
+https://cheers-mp.com
 
 ## 快速体验 demo
 

@@ -11,5 +11,6 @@ deploy:
   local_dir: docs/.vuepress/dist
   github_token: $GITHUB_TOKEN
   keep_history: true
+  fqdn: cheers-mp.com
   on:
     branch: master

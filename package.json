@@ -2,10 +2,10 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@vuepress/plugin-back-to-top": "^1.5.0",
-    "@vuepress/plugin-google-analytics": "^1.5.0",
-    "lerna": "^3.20.2",
-    "vuepress": "^1.5.0"
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.2"
   },
   "prettier": {
     "printWidth": 120
@@ -16,10 +16,11 @@
     "lint": "eslint --fix packages/**/*.js"
   },
   "dependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^2.0.4"
+    "@vuepress/plugin-back-to-top": "^1.5.0",
+    "@vuepress/plugin-google-analytics": "^1.5.0",
+    "lerna": "^3.20.2",
+    "vuepress": "^1.5.0",
+    "prettier": "^2.0.4",
+    "vuepress-plugin-live2d-cat": "^0.1.6"
   }
 }

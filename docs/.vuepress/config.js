@@ -54,8 +54,9 @@ module.exports = {
     [
       "@vuepress/google-analytics",
       {
-        ga: "UA-168380782-1", // UA-00000000-0
+        ga: "UA-168380782-1",
       },
     ],
+    "vuepress-plugin-live2d-cat",
   ],
 };

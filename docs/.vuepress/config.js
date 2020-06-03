@@ -6,8 +6,8 @@ module.exports = {
     repo: "bigmeow/cheers-mp",
     editLinks: true,
     lastUpdated: true,
-    // 默认为 "Edit this page"
-    editLinkText: "帮助我们改善此页面！",
+    editLinkText: "在 GitHub 上编辑此页",
+    docsDir: "docs",
     smoothScroll: true,
     displayAllHeaders: true,
     sidebar: [

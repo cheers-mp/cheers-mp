@@ -49,5 +49,13 @@ module.exports = {
       */
     ],
   },
-  plugins: ["@vuepress/back-to-top"],
+  plugins: [
+    "@vuepress/back-to-top",
+    [
+      "@vuepress/google-analytics",
+      {
+        ga: "UA-168380782-1", // UA-00000000-0
+      },
+    ],
+  ],
 };

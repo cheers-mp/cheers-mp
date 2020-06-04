@@ -9014,6 +9014,11 @@ vuepress-plugin-container@^2.0.2:
   dependencies:
     markdown-it-container "^2.0.0"
 
+vuepress-plugin-live2d-cat@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/vuepress-plugin-live2d-cat/-/vuepress-plugin-live2d-cat-0.1.6.tgz#a2ffc48ab5e62f8e55de6f9ea21d211d64b8dab7"
+  integrity sha512-a/SkhH11xLPIiBUy7OLSzfCtw6UGpAdOE6iDq9bPyexboGxGe8Qp48YFiw0/jHfsmH0JQk2ullbwFevFD1DMNQ==
+
 vuepress-plugin-smooth-scroll@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/vuepress-plugin-smooth-scroll/-/vuepress-plugin-smooth-scroll-0.0.3.tgz#6eff2d4c186cca917cc9f7df2b0af7de7c8c6438"

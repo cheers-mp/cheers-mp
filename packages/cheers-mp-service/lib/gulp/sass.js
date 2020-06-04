@@ -19,11 +19,7 @@ const defaultOpt = {
 function sass(opt, userOptions) {
   opt = deepmerge(defaultOpt, opt);
   const postcssPlugins = [];
-  const sassOption = Object.assign(
-    {},
-    { fiber: require("fibers"), includePaths: [opt.srcDir] },
-    userOptions.css.scss || userOptions.css.sass
-  );
+  const sassOption = Object.assign({}, { includePaths: [opt.srcDir] }, userOptions.css.scss || userOptions.css.sass);
 
   if (Array.isArray(userOptions.css.postcss) && userOptions.css.postcss.length > 0) {
     postcssPlugins.push(...userOptions.css.postcss);

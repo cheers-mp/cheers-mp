@@ -12,6 +12,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f git@github.com:bigmeow/cheers-mp.git master:gh-pages
+git push -f git@github.com:cheers-mp/cheers-mp.git master:gh-pages
 
 cd -

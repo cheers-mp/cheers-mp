@@ -3,7 +3,7 @@ module.exports = {
   description: "Almost 零配置小程序脚手架(゜-゜)つロ 干杯~",
   base: "/",
   themeConfig: {
-    repo: "bigmeow/cheers-mp",
+    repo: "cheers-mp/cheers-mp",
     editLinks: true,
     lastUpdated: true,
     editLinkText: "在 GitHub 上编辑此页",

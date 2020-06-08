@@ -3,6 +3,10 @@ module.exports = {
   description: "Almost 零配置小程序脚手架(゜-゜)つロ 干杯~",
   base: "/",
   themeConfig: {
+    algolia: {
+      apiKey: "c601540e6d6e908f868c5c86d6935334",
+      indexName: "cheers-mp",
+    },
     repo: "cheers-mp/cheers-mp",
     editLinks: true,
     lastUpdated: true,

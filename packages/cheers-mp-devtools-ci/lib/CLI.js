@@ -35,16 +35,33 @@ class CLI {
     this.initialized = true;
 
     // 检查是否开启了命令行
-    const ideStatusFile = path.join(
+    /**
+     新版端口号文件是否开启配置
+        macOS : ~/Library/Application Support/微信开发者工具/<开发者工具安装路径的MD5>/Default/.ide-status
+        Windows : ~/AppData/Local/微信开发者工具/User Data/<开发者工具安装路径的MD5>/Default/.ide-status
+      */
+    let ideStatusFile = path.join(
       os.homedir(),
       os.platform() === "win32"
         ? "/AppData/Local/微信开发者工具/User Data/Default/.ide-status"
         : "/Library/Application Support/微信开发者工具/Default/.ide-status"
     );
+
     const errMesg = `工具的服务端口已关闭。要使用命令行调用工具，请打开工具 -> 设置 -> 安全设置，将服务端口开启。
-    详细信息: https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html`;
-    if (!(await fs.exists(ideStatusFile))) {
-      throw new Error(errMesg);
+  详细信息: https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html`;
+    if (!(await fs.pathExists(ideStatusFile))) {
+      const installPath =
+        os.platform() === "win32" ? this.devToolsInstallPath : `${this.devToolsInstallPath}/Contents/MacOS`;
+      const md5 = require("crypto").createHash("md5").update(installPath).digest("hex");
+      ideStatusFile = path.join(
+        os.homedir(),
+        os.platform() === "win32"
+          ? `/AppData/Local/微信开发者工具/User Data/${md5}/Default/.ide-status`
+          : `/Library/Application Support/微信开发者工具/${md5}/Default/.ide-status`
+      );
+      if (!(await fs.pathExists(ideStatusFile))) {
+        throw new Error(errMesg);
+      }
     }
     const ideStatus = await fs.readFile(ideStatusFile, "utf-8");
     if (ideStatus === "Off") throw new Error(errMesg);

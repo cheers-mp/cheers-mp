@@ -87,5 +87,7 @@ module.exports = (api, userOptions) => {
     // console.log("编译编译完成");
   }
   parseRoute();
-  gulp.watch(routeConfigPath, parseRoute);
+  if (process.env.NODE_ENV === "development") {
+    gulp.watch(routeConfigPath, parseRoute);
+  }
 };

@@ -130,6 +130,22 @@ class CLI {
     return this._exec(commandStr);
   }
 
+  /**
+   * 清除文件编译缓存
+   * @param {string} projectPath
+   */
+  cleanCompileCache(projectPath) {
+    if (this.version === "v1") {
+      console.warn("仅v2版本支持 cache 命令，当前 v1 版本将不执行");
+      return Promise.resolve({
+        stdout: "",
+        stderr: "",
+      });
+    }
+    const commandStr = ["cache", IF(projectPath, `--clean compile --project "${projectPath}"`)].join("");
+    return this._exec(commandStr);
+  }
+
   close(projectPath) {
     const commandStr =
       this.version === "v1"

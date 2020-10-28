@@ -45,6 +45,25 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
   }
   buildNPM.displayName = "调用本地开发者工具的“构建NPM”服务";
 
+  function close() {
+    return new Promise((resolve) => {
+      instance
+        .close(opt.context)
+        .then((res) => {
+          console.log(res.stderr);
+          console.log(res.stdout);
+          console.log("\n等待3秒后自动打开项目...");
+          setTimeout(() => {
+            resolve();
+          }, 3500);
+        })
+        .catch((error) => {
+          warn("关闭失败，请手动进行操作。\n失败原因：" + error.stdout + error.stderr);
+        });
+    });
+  }
+  close.displayName = "在本地开发者工具中关闭当前项目";
+
   async function open() {
     try {
       const res = await instance.open(opt.context);
@@ -55,17 +74,6 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
     }
   }
   open.displayName = "在本地开发者工具中打开项目";
-
-  async function refreshFileCache() {
-    try {
-      const res = await instance.resetFileutils(opt.context);
-      console.log(res.stderr);
-      console.log(res.stdout);
-    } catch (error) {
-      warn("CI缓存清除失败,您可手动点击开发者工具的“清除文件缓存”按钮。\n失败原因：" + error.stdout + error.stderr);
-    }
-  }
-  refreshFileCache.displayName = "重置工具内部文件缓存";
 
   async function upload() {
     const res = await instance.upload(opt.context, formatDate(new Date(), "yyyy.MM.ddhhmmss"), "自动构建上传测试");
@@ -79,13 +87,11 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
     taskSync.push(createPackageJSON, installDependencies, buildNPM);
   }
   if (args.open) {
-    taskSync.push(open);
+    taskSync.push(close, open);
   }
   if (args.upload) {
     taskSync.push(upload);
   }
-
-  taskSync.push(refreshFileCache);
 
   return taskSync.length ? gulp.series(...taskSync) : [];
 };

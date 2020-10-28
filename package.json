@@ -13,7 +13,8 @@
   "scripts": {
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "lint": "eslint --fix packages/**/*.js"
+    "lint": "eslint --fix packages/**/*.js",
+    "publish": "lerna publish --force-publish"
   },
   "dependencies": {
     "@vuepress/plugin-back-to-top": "^1.5.0",

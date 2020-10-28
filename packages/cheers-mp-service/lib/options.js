@@ -5,7 +5,7 @@ const schema = createSchema((joi) =>
     /** 配置阿里云、七牛云存储 */
     oss: joi
       .object({
-        type: joi.any().valid(["ALI", "QINIU"]).required(),
+        type: joi.any().valid(["ALI", "QINIU", "UCLOUD"]).required(),
         options: joi.object().required(),
       })
       .allow(""),

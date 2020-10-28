@@ -87,7 +87,7 @@ const installAndBuilder = async (opt, userOptions, args, useCache, writeCacheIde
 
   taskSync.push(refreshFileCache);
 
-  return gulp.series(...taskSync);
+  return taskSync.length ? gulp.series(...taskSync) : [];
 };
 
 module.exports = installAndBuilder;

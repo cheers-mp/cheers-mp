@@ -19,6 +19,15 @@ interface Options {
     prefix: string,
     domain: string,
     https: false
+    // Ucloud
+    accessKeyId: string,
+    secretAccessKey: string,
+    bucket: string,
+    prefix: string,
+    endpoint: string,
+    sslEnabled: false
+    // any other options are passed to new AWS.S3()
+    // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
   }
 }
 */
@@ -35,6 +44,9 @@ class Operator {
     } else if (config.type === "QINIU") {
       this.client = new QINIUOSS(config.options);
       this.spliter = "_";
+    } else if (config.type === "UCLOUD") {
+      this.client = new UcloudOSS(config.options);
+      this.spliter = "/";
     }
     this.alreadyUpList = {
       ready: false,
@@ -157,15 +169,15 @@ class ALIOSS {
   upload(objectName, localFile) {
     return this.client.put(objectName, localFile);
     /*
-    {
-      name: '',
-      url: '',
-      res: {
-        status: 200,
-        statusCode: 200,
-        statusMessage: 'OK'
-    }
-    } */
+        {
+          name: '',
+          url: '',
+          res: {
+            status: 200,
+            statusCode: 200,
+            statusMessage: 'OK'
+        }
+        } */
     // console.log("上传结果", res);
   }
 }
@@ -240,6 +252,85 @@ class QINIUOSS {
         //   console.log(respInfo.statusCode);
         //   console.log(respBody);
         // }
+      });
+    });
+  }
+}
+
+class UcloudOSS {
+  constructor(options) {
+    const s3 = require("s3");
+    const client = s3.createClient({
+      maxAsyncS3: 20, // this is the default
+      s3RetryCount: 3, // this is the default
+      s3RetryDelay: 1000, // this is the default
+      multipartUploadThreshold: 20971520, // this is the default (20 MB)
+      multipartUploadSize: 15728640, // this is the default (15 MB)
+      s3Options: {
+        s3ForcePathStyle: true,
+        // s3DisableBodySigning: true,
+        s3BucketEndpoint: true,
+        ...options,
+      },
+    });
+    this.client = client;
+    this.bucket = options.bucket;
+  }
+
+  /** 检查文件是否在云存储空间已经存在  */
+  checkFileUpStatus(objectName) {
+    return new Promise((resolve, reject) => {
+      this.client.s3.headObject(
+        {
+          Bucket: this.bucket,
+          Key: objectName,
+        },
+        (err) => {
+          if (err) {
+            if (err.statusCode === 404) {
+              resolve(false);
+            } else {
+              reject(err);
+            }
+            return;
+          }
+          /**
+                 {
+                    AcceptRanges: 'bytes',
+                    LastModified: 'Mon, 26 Oct 2020 05:38:35 GMT',
+                    ContentLength: '107580',
+                    ETag: '"7cf16a88d58a6a39666acecf9950bece"',
+                    ContentType: 'image/jpeg',
+                    Metadata: {}
+                }
+                 */
+          resolve(true);
+        }
+      );
+    });
+  }
+
+  upload(objectName, localFile) {
+    return new Promise((resolve, rejects) => {
+      const params = {
+        localFile,
+        s3Params: {
+          Bucket: this.bucket,
+          Key: objectName,
+          // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
+        },
+      };
+      const uploader = this.client.uploadFile(params);
+      uploader.on("error", (err) => {
+        // console.error("上传失败:", err.stack);
+        rejects(err.stack);
+      });
+      //   uploader.on("progress", () => {
+      //     console.log("正在上传:", ((uploader.progressAmount / uploader.progressTotal) * 100).toFixed(0), "%");
+      //   });
+      uploader.on("end", (res) => {
+        resolve(res);
+        // console.log("上传完毕", res);
       });
     });
   }

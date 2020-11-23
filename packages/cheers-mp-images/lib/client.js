@@ -2,7 +2,7 @@ const chalk = require("chalk");
 const glob = require("glob");
 /*
 interface Options {
-  type: "ALI" | "QINIU",
+  type: "ALI" | "QINIU" | "UCLOUD",
   options: {
     // 阿里
     bucket: string

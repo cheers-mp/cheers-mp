@@ -1,6 +1,6 @@
 {
   "name": "cheers-mp-plugin-router",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "读取 cheers-mp-router 路由库的路由配置，自动生成对应的小程序页面path数组并设置到app.json中",
   "keywords": [
     "cheers-mp-plugin"

@@ -1,6 +1,6 @@
 {
   "name": "cheers-mp-service",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "提供插件化的零配置小程序脚手架服务",
   "keywords": [
     "cheers-mp-service",
@@ -33,8 +33,8 @@
     "@megalo/px2rpx": "^0.1.0",
     "axios": "^0.19.2",
     "chalk": "^3.0.0",
-    "cheers-mp-devtools-ci": "^1.7.1",
-    "cheers-mp-images": "^1.7.1",
+    "cheers-mp-devtools-ci": "^1.8.0",
+    "cheers-mp-images": "^1.8.0",
     "dart-sass": "^1.25.0",
     "deepmerge": "^4.2.2",
     "del": "^5.1.0",

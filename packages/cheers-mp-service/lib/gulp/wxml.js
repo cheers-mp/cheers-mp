@@ -10,7 +10,7 @@ const defaultOpt = {
   rewriter: (url) => url,
 };
 
-function wxml(opt) {
+function wxml(opt, userOptions) {
   opt = deepmerge(defaultOpt, opt);
 
   function compileWXML() {
@@ -21,6 +21,7 @@ function wxml(opt) {
           opt.isUseOSS,
           gulpCDN({
             rewriter: opt.rewriter,
+            wxml: userOptions.transformAssetUrls,
           })
         )
       )

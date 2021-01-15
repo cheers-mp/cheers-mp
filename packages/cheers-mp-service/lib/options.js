@@ -62,6 +62,8 @@ const schema = createSchema((joi) =>
       }),
     }),
 
+    transformAssetUrls: joi.object(),
+
     // 如果你不需要生产环境的js source map，可以将其设置为 false 以加速生产环境构建。
     productionSourceMap: joi.boolean(),
 

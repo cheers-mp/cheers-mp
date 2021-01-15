@@ -106,6 +106,15 @@ export interface ProjectOptions {
       rpxPrecision: number;
     };
   };
+  /** 处理资源路径， 默认情况下处理的资源为：
+   * @example
+   * {
+   *  image: "src",
+   *  video: "poster",
+   *  "cover-image": "src"
+   * }
+   *  */
+  transformAssetUrls?: Record<string, any>;
 
   lintOnSave?: boolean | "default" | "warning" | "error";
   /** 插件配置选项 */

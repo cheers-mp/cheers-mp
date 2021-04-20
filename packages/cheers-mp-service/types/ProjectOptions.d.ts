@@ -50,6 +50,8 @@ interface UcloudOSS {
     endpoint: string;
     /** 是否使用 https上传 */
     sslEnabled: false;
+    /** 自定义访问域名 */
+    accessDomain?: string;
   };
 }
 

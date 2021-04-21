@@ -71,9 +71,9 @@ const ImageOperator = async (config) => {
         // 七牛云oss不支持目录划分
         return `${options.https ? "https" : "http"}://${domain}/${options.prefix}_${hash}.${ext}`;
       } else if (type === "UCLOUD") {
-        return `${options.sslEnabled ? "https" : "http"}://${options.accessDomain || options.endpoint}/${options.bucket}/${
-          options.prefix
-        }/${hash}.${ext}`;
+        return `${options.sslEnabled ? "https" : "http"}://${options.accessDomain || options.endpoint}/${
+          options.bucket
+        }/${options.prefix}/${hash}.${ext}`;
       }
     },
   };

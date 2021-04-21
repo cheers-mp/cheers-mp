@@ -7,7 +7,7 @@ const parse = require("@babel/parser").parse;
 module.exports = (api, userOptions) => {
   if (!userOptions.pluginOptions || !userOptions.pluginOptions.router) return;
   const routeConfigPath = userOptions.pluginOptions.router;
-  async function parseRoute() {
+  function parseRoute() {
     const parseContext = fsx.readFileSync(routeConfigPath, { encoding: "utf-8" });
     // console.log("插件被加载了", );
     // gulp.src(routeConfigPath)
@@ -78,12 +78,12 @@ module.exports = (api, userOptions) => {
 
     const appJSONPath = api.resolve("./src/app.json");
 
-    const appJSON = require(appJSONPath);
+    const appJSON = fsx.readJSONSync(appJSONPath, { encoding: "utf-8" });
 
     appJSON.pages = mainPackage;
     appJSON.subpackages = [...subPkgMap.values()];
     // console.log(appJSON);
-    await writeJsonFile(appJSONPath, appJSON, { detectIndent: true });
+    writeJsonFile.sync(appJSONPath, appJSON, { detectIndent: true });
     // console.log("编译编译完成");
   }
   parseRoute();

@@ -55,6 +55,25 @@ interface UcloudOSS {
   };
 }
 
+interface TencentOSS {
+    /** 腾讯云 */
+    type: "TENCENT";
+    options: {
+        secretId: string,
+        secretKey: string,
+        /** 空间/桶名称*/
+        bucket: string,
+        /** 存储区域 */
+        region: string,
+        /** 访问路径前缀，可自行定义值，一般可以取项目名称，注意不要有特殊符号存在*/
+        prefix: string;
+        /** 自定义访问域名 */
+        accessDomain?: string;
+        /** 是否使用 https 访问 */
+        https?: boolean;
+    }
+}
+
 /** “硬编译”配置 */
 interface HardOptions {
   /** 硬编译 */
@@ -91,7 +110,7 @@ export interface ProjectOptions {
   /** 编译器选项 */
   compiler: CompilerOptions;
   /** 图片上传到云存储配置 */
-  oss?: AliOSS | QiniuOSS | UcloudOSS;
+  oss?: AliOSS | QiniuOSS | UcloudOSS | TencentOSS;
 
   /** css 相关处理 */
   css?: {

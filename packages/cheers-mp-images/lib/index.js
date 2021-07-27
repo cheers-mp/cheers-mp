@@ -61,8 +61,9 @@ const ImageOperator = async (config) => {
       const { type, options } = config.oss;
       const ext = localFile.split(".").reverse()[0];
       const hash = getHash(localFile);
+      const split = options.prefix === "" ? "" : `/`;
       if (type === "ALI") {
-        return `https://${options.bucket}.${options.region}.aliyuncs.com/${options.prefix}/${hash}.${ext}`;
+        return `https://${options.bucket}.${options.region}.aliyuncs.com/${options.prefix}${split}${hash}.${ext}`;
       } else if (type === "QINIU") {
         const domain = options.domain;
         if (/(clouddn.com|qiniucdn.com|qnssl.com|qbox.me)$/i.test(domain)) {
@@ -74,6 +75,9 @@ const ImageOperator = async (config) => {
         return `${options.sslEnabled ? "https" : "http"}://${options.accessDomain || options.endpoint}/${
           options.bucket
         }/${options.prefix}/${hash}.${ext}`;
+      } else if (type === "TENCENT") {
+        const domain = options.accessDomain || `${options.bucket}.cos.${options.region}.myqcloud.com`;
+        return `${options.https ? "https" : "http"}://${domain}/${options.prefix}${split}${hash}.${ext}`;
       }
     },
   };

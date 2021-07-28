@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 const glob = require("glob");
+const fs = require("fs");
 /*
 interface Options {
   type: "ALI" | "QINIU" | "UCLOUD",
@@ -28,6 +29,13 @@ interface Options {
     sslEnabled: false
     // any other options are passed to new AWS.S3()
     // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
+    // 腾讯云
+    secretId: string,
+    secretKey: string,
+    bucket: string,
+    region: string,
+    prefix: string;
+    accessDomain?: string;
   }
 }
 */
@@ -46,6 +54,9 @@ class Operator {
       this.spliter = "_";
     } else if (config.type === "UCLOUD") {
       this.client = new UcloudOSS(config.options);
+      this.spliter = "/";
+    } else if (config.type === "TENCENT") {
+      this.client = new TencentOSS(config.options);
       this.spliter = "/";
     }
     this.alreadyUpList = {
@@ -332,6 +343,55 @@ class UcloudOSS {
         resolve(res);
         // console.log("上传完毕", res);
       });
+    });
+  }
+}
+
+class TencentOSS {
+  constructor(options) {
+    const COS = require("cos-nodejs-sdk-v5");
+    const client = new COS({
+      SecretId: options.secretId,
+      SecretKey: options.secretKey,
+    });
+    this.client = client;
+    this.bucket = options.bucket;
+    this.region = options.region;
+  }
+
+  /** 检查文件是否在云存储空间已经存在  */
+  checkFileUpStatus(objectName) {
+    return new Promise((resolve, reject) => {
+      this.client
+        .headObject({
+          Bucket: this.bucket,
+          Region: this.region,
+          Key: objectName,
+        })
+        .then((res) => {
+          if (res.statusCode === 200) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch((err) => {
+          if (err.statusCode === 404) {
+            resolve(false);
+          } else {
+            reject(err);
+          }
+        });
+    });
+  }
+
+  upload(objectName, localFile) {
+    return this.client.putObject({
+      Bucket: this.bucket,
+      Region: this.region,
+      Key: objectName,
+      Body: fs.createReadStream(localFile),
+      ContentLength: fs.statSync(localFile).size,
     });
   }
 }

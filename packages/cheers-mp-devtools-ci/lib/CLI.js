@@ -13,7 +13,7 @@ function IF(condition, result) {
  * 通过命令行调用安装完成的工具可执行文件，完成打开开发工具、构建NPM、上传等操作。
  */
 class CLI {
-  constructor(devToolsInstallPath, version = "v1") {
+  constructor(devToolsInstallPath, version = "v2") {
     /** 微信小程序开发者工具安装路径 */
     this.devToolsInstallPath = devToolsInstallPath;
 

@@ -34,6 +34,12 @@ class CLI {
     }
     this.initialized = true;
 
+    // 检查安装路径是否存在
+    if (!(await fs.pathExists(this.devToolsInstallPath)))
+      throw new Error(
+        `微信开发者工具安装路径“${this.devToolsInstallPath}”不存在,请在"cheers.config.js"文件中配置“compiler.options.devToolsDir”属性`
+      );
+
     // 检查是否开启了命令行
     /**
      新版端口号文件是否开启配置
@@ -66,10 +72,7 @@ class CLI {
     const ideStatus = await fs.readFile(ideStatusFile, "utf-8");
     if (ideStatus === "Off") throw new Error(errMesg);
 
-    // 检查安装路径是否存在
-    if (!(await fs.exists(this.devToolsInstallPath)))
-      throw new Error(`微信开发者工具安装路径“${this.devToolsInstallPath}”不存在`);
-    if (!(await fs.exists(this.cliPath))) throw new Error(`命令行工具路径“${this.cliPath}”不存在`);
+    if (!(await fs.pathExists(this.cliPath))) throw new Error(`命令行工具路径“${this.cliPath}”不存在`);
   }
 
   async _exec(commandStr) {

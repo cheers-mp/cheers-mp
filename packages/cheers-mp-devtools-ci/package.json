@@ -1,6 +1,6 @@
 {
   "name": "cheers-mp-devtools-ci",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "description": "对微信客户端开发者工具提供的命令服务二次封装",
   "keywords": [
     "微信小程序",

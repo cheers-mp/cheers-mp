@@ -14,7 +14,8 @@
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "lint": "eslint --fix packages/**/*.js",
-    "publish": "lerna publish --force-publish"
+    "publish": "lerna publish --force-publish",
+    "publish-git": "lerna publish from-git"
   },
   "dependencies": {
     "@vuepress/plugin-back-to-top": "^1.5.0",
